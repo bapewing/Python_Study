@@ -1,5 +1,11 @@
+from gevent import monkey
 import socket
 import re
+import threading
+import multiprocessing
+import gevent
+
+monkey.patch_all()  # 将阻塞程序的函数变成非阻塞，从而实现协程
 
 
 def handle_client_request(df_socket):
@@ -43,7 +49,18 @@ def main():
     while True:
         client_socket, client_address = server_socket.accept()
         print("接收来自%s的请求" % (client_address,))
-        handle_client_request(client_socket)
+        # 多线程
+        # thd = threading.Thread(target=handle_client_request, args=(client_socket, ))
+        # thd.start()
+        # 多进程
+        # process = multiprocessing.Process(target=handle_client_request, args=(client_socket, ))
+        # process.start()
+        # 进程间不共享全局变量，且各个进程之间互不影响
+        # 子进程执行任务时，主进程socket要及时关闭，否则主进程不断消耗资源
+        # client_socket.close()
+        gevent.spawn(handle_client_request, client_socket)
+        # join jionall 目的让主进程等待协程执行完毕再继续执行
+        # 此处因为外层有个死循环 所以主进程不会结束 而添加join的话 又相当于单任务了
 
 
 if __name__ == '__main__':
