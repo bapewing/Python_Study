@@ -1,4 +1,5 @@
 import time
+import re
 
 
 def get_time():
@@ -6,13 +7,23 @@ def get_time():
 
 
 def index():
+    data_from_sql = "暂时没有数据"
 
-    return "index"
+    with open("./template/index.html", "r") as file:
+        html_data = file.read()
+
+    html_data = re.sub(r"\{%content%\}", data_from_sql, html_data)
+    return html_data
 
 
 def center():
+    data_from_sql = "暂时没有数据"
 
-    return "center"
+    with open("./template/center.html", "r") as file:
+        html_data = file.read()
+
+    html_data = re.sub(r"\{%content%\}", data_from_sql, html_data)
+    return html_data
 
 
 # WSGI 协议的实现是为了服务器通过框架访问数据库内的动态资源
