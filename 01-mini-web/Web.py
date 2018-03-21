@@ -51,7 +51,8 @@ class HTTPServer(object):
         # .py结尾就是请求动态资源
         if url_resource.endswith(".py"):
             import Application
-            response_body = Application.app({}, self.start_response)
+            # Application模块一定要调用start_response函数，否则HTTPServer找不到response_header属性
+            response_body = Application.app({"PATH_INFO": url_resource}, self.start_response)
             response = (self.response_header + "\r\n" + response_body).encode()
             df_socket.send(response)
             df_socket.close()
