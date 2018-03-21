@@ -106,6 +106,10 @@ def add(path_info):
     try:
         conn = pymysql.connect(host="localhost", port=3306, db="stock_db", user="root", password="1017", charset="utf8")
         cur = conn.cursor()
+        # 添加之前先判断，数据库中是否有要添加的记录
+        sql = "SELECT * FROM focus WHERE info_id = (SELECT id FROM info WHERE code = %s)"
+        if cur.execute(sql, [code]):
+            return "已经收藏过该支股票"
         sql = "INSERT INTO focus (info_id) SELECT id FROM info WHERE code = %s"
         cur.execute(sql, [code])
         conn.commit()
@@ -114,6 +118,25 @@ def add(path_info):
         return "添加失败" + str(e)
     else:
         return "添加成功"
+    finally:
+        cur.close()
+        conn.close()
+
+
+@create_route_list("/del/\d{6}\.html")
+def delete(path_info):
+    code = re.match("/del/(\d{6})\.html", path_info).group(1)
+    try:
+        conn = pymysql.connect(host="localhost", port=3306, db="stock_db", user="root", password="1017", charset="utf8")
+        cur = conn.cursor()
+        sql = "DELETE FROM focus WHERE info_id =  (SELECT id FROM info WHERE code = %s)"
+        cur.execute(sql, [code])
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        return "删除失败" + str(e)
+    else:
+        return "删除成功"
     finally:
         cur.close()
         conn.close()

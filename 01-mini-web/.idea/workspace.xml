@@ -10,7 +10,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/01_mini_web$Web.coverage" NAME="Web Coverage Results" MODIFIED="1521650390272" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/01_mini_web$Web.coverage" NAME="Web Coverage Results" MODIFIED="1521651298024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/01_mini_web$Application.coverage" NAME="Application Coverage Results" MODIFIED="1521640446684" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
@@ -30,15 +30,19 @@
       <file leaf-file-name="Application.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Application.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-789">
-              <caret line="20" column="33" lean-forward="false" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
+            <state relative-caret-position="-57">
+              <caret line="133" column="21" lean-forward="true" selection-start-line="133" selection-start-column="21" selection-end-line="133" selection-end-column="21" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
-                <marker date="1521650390258" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
-                <marker date="1521650390258" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
-                <marker date="1521650390258" expanded="true" signature="1793:1910" ph="select i.cod... info" />
-                <marker date="1521650390258" expanded="true" signature="3411:3474" ph="INSERT INTO focus... " />
-                <marker date="1521650390258" expanded="true" signature="3439:3474" ph="SELECT id FR... info" />
+                <marker date="1521651331329" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
+                <marker date="1521651331329" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
+                <marker date="1521651331329" expanded="true" signature="1793:1910" ph="select i.cod... info" />
+                <marker date="1521651331329" expanded="true" signature="3443:3516" ph="SELECT * FRO... focus" />
+                <marker date="1521651331329" expanded="true" signature="3480:3515" ph="SELECT id FR... info" />
+                <marker date="1521651331329" expanded="true" signature="3601:3664" ph="INSERT INTO focus... " />
+                <marker date="1521651331329" expanded="true" signature="3629:3664" ph="SELECT id FR... info" />
+                <marker date="1521651331329" expanded="true" signature="4188:4260" ph="DELETE FROM focus... " />
+                <marker date="1521651331329" expanded="true" signature="4224:4259" ph="SELECT id FR... info" />
               </folding>
             </state>
           </provider>
@@ -246,11 +250,15 @@
           <caret line="69" column="24" lean-forward="true" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <marker date="1521650390258" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
-            <marker date="1521650390258" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
-            <marker date="1521650390258" expanded="true" signature="1793:1910" ph="select i.cod... info" />
-            <marker date="1521650390258" expanded="true" signature="3411:3474" ph="INSERT INTO focus... " />
-            <marker date="1521650390258" expanded="true" signature="3439:3474" ph="SELECT id FR... info" />
+            <marker date="1521651331329" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
+            <marker date="1521651331329" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
+            <marker date="1521651331329" expanded="true" signature="1793:1910" ph="select i.cod... info" />
+            <marker date="1521651331329" expanded="true" signature="3443:3516" ph="SELECT * FRO... focus" />
+            <marker date="1521651331329" expanded="true" signature="3480:3515" ph="SELECT id FR... info" />
+            <marker date="1521651331329" expanded="true" signature="3601:3664" ph="INSERT INTO focus... " />
+            <marker date="1521651331329" expanded="true" signature="3629:3664" ph="SELECT id FR... info" />
+            <marker date="1521651331329" expanded="true" signature="4188:4260" ph="DELETE FROM focus... " />
+            <marker date="1521651331329" expanded="true" signature="4224:4259" ph="SELECT id FR... info" />
           </folding>
         </state>
       </provider>
@@ -271,11 +279,15 @@
           <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <marker date="1521650390258" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
-            <marker date="1521650390258" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
-            <marker date="1521650390258" expanded="true" signature="1793:1910" ph="select i.cod... info" />
-            <marker date="1521650390258" expanded="true" signature="3411:3474" ph="INSERT INTO focus... " />
-            <marker date="1521650390258" expanded="true" signature="3439:3474" ph="SELECT id FR... info" />
+            <marker date="1521651331329" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
+            <marker date="1521651331329" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
+            <marker date="1521651331329" expanded="true" signature="1793:1910" ph="select i.cod... info" />
+            <marker date="1521651331329" expanded="true" signature="3443:3516" ph="SELECT * FRO... focus" />
+            <marker date="1521651331329" expanded="true" signature="3480:3515" ph="SELECT id FR... info" />
+            <marker date="1521651331329" expanded="true" signature="3601:3664" ph="INSERT INTO focus... " />
+            <marker date="1521651331329" expanded="true" signature="3629:3664" ph="SELECT id FR... info" />
+            <marker date="1521651331329" expanded="true" signature="4188:4260" ph="DELETE FROM focus... " />
+            <marker date="1521651331329" expanded="true" signature="4224:4259" ph="SELECT id FR... info" />
           </folding>
         </state>
       </provider>
@@ -292,15 +304,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Application.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-789">
-          <caret line="20" column="33" lean-forward="false" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
+        <state relative-caret-position="-57">
+          <caret line="133" column="21" lean-forward="true" selection-start-line="133" selection-start-column="21" selection-end-line="133" selection-end-column="21" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <marker date="1521650390258" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
-            <marker date="1521650390258" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
-            <marker date="1521650390258" expanded="true" signature="1793:1910" ph="select i.cod... info" />
-            <marker date="1521650390258" expanded="true" signature="3411:3474" ph="INSERT INTO focus... " />
-            <marker date="1521650390258" expanded="true" signature="3439:3474" ph="SELECT id FR... info" />
+            <marker date="1521651331329" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
+            <marker date="1521651331329" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
+            <marker date="1521651331329" expanded="true" signature="1793:1910" ph="select i.cod... info" />
+            <marker date="1521651331329" expanded="true" signature="3443:3516" ph="SELECT * FRO... focus" />
+            <marker date="1521651331329" expanded="true" signature="3480:3515" ph="SELECT id FR... info" />
+            <marker date="1521651331329" expanded="true" signature="3601:3664" ph="INSERT INTO focus... " />
+            <marker date="1521651331329" expanded="true" signature="3629:3664" ph="SELECT id FR... info" />
+            <marker date="1521651331329" expanded="true" signature="4188:4260" ph="DELETE FROM focus... " />
+            <marker date="1521651331329" expanded="true" signature="4224:4259" ph="SELECT id FR... info" />
           </folding>
         </state>
       </provider>
