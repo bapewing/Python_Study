@@ -49,7 +49,7 @@ class HTTPServer(object):
         if url_resource == "/":
             url_resource = "/index.html"
         # .py结尾就是请求动态资源
-        if url_resource.endswith(".py"):
+        if url_resource.endswith(".html"):
             import Application
             # Application模块一定要调用start_response函数，否则HTTPServer找不到response_header属性
             response_body = Application.app({"PATH_INFO": url_resource}, self.start_response)

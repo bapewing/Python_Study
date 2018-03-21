@@ -18,13 +18,13 @@ def create_route_list(path_info):
 
 
 # 利用装饰器工厂的概念，创建函数时，自动创建路由列表
-@create_route_list("/gettime.py")
-def get_time():
+@create_route_list("/gettime.html")
+def get_time(path_info):
     return time.ctime()
 
 
-@create_route_list("/index.py")
-def index():
+@create_route_list("/index.html")
+def index(path_info):
     data_from_sql = ""
     try:
         conn = pymysql.connect(host="localhost", port=3306, db="stock_db", user="root", password="1017", charset="utf8")
@@ -47,7 +47,7 @@ def index():
             """ % (line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7], line[1])
             data_from_sql += line_data
         conn.commit()
-        with open("./template/center.html", "r") as file:
+        with open("./template/index.html", "r") as file:
             html_data = file.read()
     except Exception as e:
         conn.rollback()
@@ -60,8 +60,8 @@ def index():
         conn.close()
 
 
-@create_route_list("/center.py")
-def center():
+@create_route_list("/center.html")
+def center(path_info):
     data_from_sql = ""
     try:
         conn = pymysql.connect(host="localhost", port=3306, db="stock_db", user="root", password="1017", charset="utf8")
@@ -100,6 +100,25 @@ def center():
         conn.close()
 
 
+@create_route_list("/add/\d{6}\.html")
+def add(path_info):
+    code = re.match("/add/(\d{6})\.html", path_info).group(1)
+    try:
+        conn = pymysql.connect(host="localhost", port=3306, db="stock_db", user="root", password="1017", charset="utf8")
+        cur = conn.cursor()
+        sql = "INSERT INTO focus (info_id) SELECT id FROM info WHERE code = %s"
+        cur.execute(sql, [code])
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        return "添加失败" + str(e)
+    else:
+        return "添加成功"
+    finally:
+        cur.close()
+        conn.close()
+
+
 # django添加路由列表
 # TODO:路由的概念？
 # route_list = [("/gettime.py", get_time), ("/index.py", index), ("/center.py", center)]
@@ -109,11 +128,13 @@ def center():
 def app(request_info, start_response):
     path_info = request_info["PATH_INFO"]
     print(path_info)
+    # 现在路由列表存放的是正则的路径，所以不能使用==去判断
     for url, func in route_list:
         print(url)
-        if url == path_info:
+        # if url == path_info:
+        if re.match(url, path_info):
             start_response("200 OK", [("Server", "Python 3.0")])
-            return func()
+            return func(path_info)
     else:
         start_response("404 Not Found", [("Content-Type", "text/html")])
         return "Hello Kitty"
