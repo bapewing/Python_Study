@@ -1,11 +1,28 @@
 import time
 import re
 
+route_list = []
 
+
+def create_route_list(path_info):
+    def func1(func):
+        route_list.append((path_info, func))
+
+        def func2():
+            pass
+
+        return func2
+
+    return func1
+
+
+# 利用装饰器工厂的概念，创建函数时，自动创建路由列表
+@create_route_list("/gettime.py")
 def get_time():
     return time.ctime()
 
 
+@create_route_list("/index.py")
 def index():
     data_from_sql = "暂时没有数据"
 
@@ -16,6 +33,7 @@ def index():
     return html_data
 
 
+@create_route_list("/center.py")
 def center():
     data_from_sql = "暂时没有数据"
 
@@ -27,7 +45,8 @@ def center():
 
 
 # django添加路由列表
-route_list = [("/gettime.py", get_time), ("/index.py", index), ("/center.py", center)]
+# TODO:路由的概念？
+# route_list = [("/gettime.py", get_time), ("/index.py", index), ("/center.py", center)]
 
 
 # WSGI 协议的实现是为了服务器通过框架访问数据库内的动态资源
