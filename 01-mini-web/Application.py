@@ -169,6 +169,25 @@ def update(path_info):
         conn.close()
 
 
+@create_route_list("/update/\d{6}/(.*)\.html")
+def update_note_info(path_info):
+    code, note_info = re.match("/update/(\d{6})/(.*)\.html", path_info).group(1, 2)
+    try:
+        conn = pymysql.connect(host="localhost", port=3306, db="stock_db", user="root", password="1017", charset="utf8")
+        cur = conn.cursor()
+        sql = "UPDATE focus SET note_info = %s WHERE info_id = (SELECT id FROM info WHERE code = %s)"
+        cur.execute(sql, [note_info, code])
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        return "更新备注信息失败" + str(e)
+    else:
+        return "更新备注信息成功"
+    finally:
+        cur.close()
+        conn.close()
+
+
 # django添加路由列表
 # TODO:路由的概念？
 # route_list = [("/gettime.py", get_time), ("/index.py", index), ("/center.py", center)]
