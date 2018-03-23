@@ -142,6 +142,33 @@ def delete(path_info):
         conn.close()
 
 
+@create_route_list("/update/\d{6}\.html")
+def update(path_info):
+    code = re.match(r"/update/(\d{6})\.html", path_info).group(1)
+    try:
+        conn = pymysql.connect(host="localhost", port=3306, db="stock_db", user="root", password="1017", charset="utf8")
+        cur = conn.cursor()
+        sql = "SELECT note_info FROM focus WHERE info_id = (SELECT id FROM info WHERE code = %s)"
+        if cur.execute(sql, [code]) == 0:
+            return "ERROR"
+        # TODO:为什么不能打印fetchone()信息
+        note_info = cur.fetchone()[0]
+        conn.commit()
+        with open("./template/update.html", "r") as file:
+            html_data = file.read()
+    except Exception as e:
+        conn.rollback()
+        return "更新备注信息失败" + str(e)
+    else:
+        # 添加修改备注信息页模板，并添加动态资源
+        html_data = re.sub(r"\{%code%\}", code, html_data)
+        html_data = re.sub(r"\{%note_info%\}", note_info, html_data)
+        return html_data
+    finally:
+        cur.close()
+        conn.close()
+
+
 # django添加路由列表
 # TODO:路由的概念？
 # route_list = [("/gettime.py", get_time), ("/index.py", index), ("/center.py", center)]
