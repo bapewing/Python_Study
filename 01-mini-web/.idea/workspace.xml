@@ -10,7 +10,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/01_mini_web$Web.coverage" NAME="Web Coverage Results" MODIFIED="1521791772660" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/01_mini_web$Web.coverage" NAME="Web Coverage Results" MODIFIED="1521792222588" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/01_mini_web$Application.coverage" NAME="Application Coverage Results" MODIFIED="1521640446684" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
@@ -30,24 +30,24 @@
       <file leaf-file-name="Application.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Application.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="364">
-              <caret line="177" column="26" lean-forward="false" selection-start-line="177" selection-start-column="26" selection-end-line="177" selection-end-column="26" />
+            <state relative-caret-position="155">
+              <caret line="176" column="34" lean-forward="false" selection-start-line="176" selection-start-column="34" selection-end-line="176" selection-end-column="34" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
-                <marker date="1521791772651" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
-                <marker date="1521791772651" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
-                <marker date="1521791772651" expanded="true" signature="1793:1910" ph="select i.cod... info" />
-                <marker date="1521791772651" expanded="true" signature="3443:3516" ph="SELECT * FRO... focus" />
-                <marker date="1521791772651" expanded="true" signature="3480:3515" ph="SELECT id FR... info" />
-                <marker date="1521791772651" expanded="true" signature="3601:3664" ph="INSERT INTO focus... " />
-                <marker date="1521791772651" expanded="true" signature="3629:3664" ph="SELECT id FR... info" />
-                <marker date="1521791772651" expanded="true" signature="4188:4260" ph="DELETE FROM focus... " />
-                <marker date="1521791772651" expanded="true" signature="4224:4259" ph="SELECT id FR... info" />
-                <marker date="1521791772651" expanded="true" signature="4791:4872" ph="SELECT note_... focus" />
-                <marker date="1521791772651" expanded="true" signature="4836:4871" ph="SELECT id FR... info" />
-                <marker date="1521791772651" expanded="true" signature="5804:5889" ph="UPDATE focucs... " />
-                <marker date="1521791772651" expanded="true" signature="5853:5880" ph="SELECT id FR... info" />
-                <marker date="1521791772651" expanded="true" signature="5853:5888" ph="SELECT id FR... info" />
+                <marker date="1521792222577" expanded="true" signature="637:655" ph="SELECT * FRO... info" />
+                <marker date="1521792222577" expanded="true" signature="1820:1943" ph="SELECT i.cod... info" />
+                <marker date="1521792222577" expanded="true" signature="1826:1943" ph="select i.cod... info" />
+                <marker date="1521792222577" expanded="true" signature="3476:3549" ph="SELECT * FRO... focus" />
+                <marker date="1521792222577" expanded="true" signature="3513:3548" ph="SELECT id FR... info" />
+                <marker date="1521792222577" expanded="true" signature="3634:3697" ph="INSERT INTO focus... " />
+                <marker date="1521792222577" expanded="true" signature="3662:3697" ph="SELECT id FR... info" />
+                <marker date="1521792222577" expanded="true" signature="4221:4293" ph="DELETE FROM focus... " />
+                <marker date="1521792222577" expanded="true" signature="4257:4292" ph="SELECT id FR... info" />
+                <marker date="1521792222577" expanded="true" signature="4824:4905" ph="SELECT note_... focus" />
+                <marker date="1521792222577" expanded="true" signature="4869:4904" ph="SELECT id FR... info" />
+                <marker date="1521792222577" expanded="true" signature="5890:5975" ph="UPDATE focucs... " />
+                <marker date="1521792222577" expanded="true" signature="5939:5966" ph="SELECT id FR... info" />
+                <marker date="1521792222577" expanded="true" signature="5939:5974" ph="SELECT id FR... info" />
               </folding>
             </state>
           </provider>
@@ -218,7 +218,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26064226" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -265,20 +265,20 @@
           <caret line="22" column="23" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="22" selection-end-column="23" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <marker date="1521791772651" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
-            <marker date="1521791772651" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
-            <marker date="1521791772651" expanded="true" signature="1793:1910" ph="select i.cod... info" />
-            <marker date="1521791772651" expanded="true" signature="3443:3516" ph="SELECT * FRO... focus" />
-            <marker date="1521791772651" expanded="true" signature="3480:3515" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="3601:3664" ph="INSERT INTO focus... " />
-            <marker date="1521791772651" expanded="true" signature="3629:3664" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="4188:4260" ph="DELETE FROM focus... " />
-            <marker date="1521791772651" expanded="true" signature="4224:4259" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="4791:4872" ph="SELECT note_... focus" />
-            <marker date="1521791772651" expanded="true" signature="4836:4871" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="5804:5889" ph="UPDATE focucs... " />
-            <marker date="1521791772651" expanded="true" signature="5853:5880" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="5853:5888" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="637:655" ph="SELECT * FRO... info" />
+            <marker date="1521792222577" expanded="true" signature="1820:1943" ph="SELECT i.cod... info" />
+            <marker date="1521792222577" expanded="true" signature="1826:1943" ph="select i.cod... info" />
+            <marker date="1521792222577" expanded="true" signature="3476:3549" ph="SELECT * FRO... focus" />
+            <marker date="1521792222577" expanded="true" signature="3513:3548" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="3634:3697" ph="INSERT INTO focus... " />
+            <marker date="1521792222577" expanded="true" signature="3662:3697" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="4221:4293" ph="DELETE FROM focus... " />
+            <marker date="1521792222577" expanded="true" signature="4257:4292" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="4824:4905" ph="SELECT note_... focus" />
+            <marker date="1521792222577" expanded="true" signature="4869:4904" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="5890:5975" ph="UPDATE focucs... " />
+            <marker date="1521792222577" expanded="true" signature="5939:5966" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="5939:5974" ph="SELECT id FR... info" />
           </folding>
         </state>
       </provider>
@@ -289,20 +289,20 @@
           <caret line="69" column="24" lean-forward="true" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <marker date="1521791772651" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
-            <marker date="1521791772651" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
-            <marker date="1521791772651" expanded="true" signature="1793:1910" ph="select i.cod... info" />
-            <marker date="1521791772651" expanded="true" signature="3443:3516" ph="SELECT * FRO... focus" />
-            <marker date="1521791772651" expanded="true" signature="3480:3515" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="3601:3664" ph="INSERT INTO focus... " />
-            <marker date="1521791772651" expanded="true" signature="3629:3664" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="4188:4260" ph="DELETE FROM focus... " />
-            <marker date="1521791772651" expanded="true" signature="4224:4259" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="4791:4872" ph="SELECT note_... focus" />
-            <marker date="1521791772651" expanded="true" signature="4836:4871" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="5804:5889" ph="UPDATE focucs... " />
-            <marker date="1521791772651" expanded="true" signature="5853:5880" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="5853:5888" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="637:655" ph="SELECT * FRO... info" />
+            <marker date="1521792222577" expanded="true" signature="1820:1943" ph="SELECT i.cod... info" />
+            <marker date="1521792222577" expanded="true" signature="1826:1943" ph="select i.cod... info" />
+            <marker date="1521792222577" expanded="true" signature="3476:3549" ph="SELECT * FRO... focus" />
+            <marker date="1521792222577" expanded="true" signature="3513:3548" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="3634:3697" ph="INSERT INTO focus... " />
+            <marker date="1521792222577" expanded="true" signature="3662:3697" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="4221:4293" ph="DELETE FROM focus... " />
+            <marker date="1521792222577" expanded="true" signature="4257:4292" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="4824:4905" ph="SELECT note_... focus" />
+            <marker date="1521792222577" expanded="true" signature="4869:4904" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="5890:5975" ph="UPDATE focucs... " />
+            <marker date="1521792222577" expanded="true" signature="5939:5966" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="5939:5974" ph="SELECT id FR... info" />
           </folding>
         </state>
       </provider>
@@ -323,20 +323,20 @@
           <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <marker date="1521791772651" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
-            <marker date="1521791772651" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
-            <marker date="1521791772651" expanded="true" signature="1793:1910" ph="select i.cod... info" />
-            <marker date="1521791772651" expanded="true" signature="3443:3516" ph="SELECT * FRO... focus" />
-            <marker date="1521791772651" expanded="true" signature="3480:3515" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="3601:3664" ph="INSERT INTO focus... " />
-            <marker date="1521791772651" expanded="true" signature="3629:3664" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="4188:4260" ph="DELETE FROM focus... " />
-            <marker date="1521791772651" expanded="true" signature="4224:4259" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="4791:4872" ph="SELECT note_... focus" />
-            <marker date="1521791772651" expanded="true" signature="4836:4871" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="5804:5889" ph="UPDATE focucs... " />
-            <marker date="1521791772651" expanded="true" signature="5853:5880" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="5853:5888" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="637:655" ph="SELECT * FRO... info" />
+            <marker date="1521792222577" expanded="true" signature="1820:1943" ph="SELECT i.cod... info" />
+            <marker date="1521792222577" expanded="true" signature="1826:1943" ph="select i.cod... info" />
+            <marker date="1521792222577" expanded="true" signature="3476:3549" ph="SELECT * FRO... focus" />
+            <marker date="1521792222577" expanded="true" signature="3513:3548" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="3634:3697" ph="INSERT INTO focus... " />
+            <marker date="1521792222577" expanded="true" signature="3662:3697" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="4221:4293" ph="DELETE FROM focus... " />
+            <marker date="1521792222577" expanded="true" signature="4257:4292" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="4824:4905" ph="SELECT note_... focus" />
+            <marker date="1521792222577" expanded="true" signature="4869:4904" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="5890:5975" ph="UPDATE focucs... " />
+            <marker date="1521792222577" expanded="true" signature="5939:5966" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="5939:5974" ph="SELECT id FR... info" />
           </folding>
         </state>
       </provider>
@@ -353,24 +353,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Application.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="177" column="26" lean-forward="false" selection-start-line="177" selection-start-column="26" selection-end-line="177" selection-end-column="26" />
+        <state relative-caret-position="155">
+          <caret line="176" column="34" lean-forward="false" selection-start-line="176" selection-start-column="34" selection-end-line="176" selection-end-column="34" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <marker date="1521791772651" expanded="true" signature="604:622" ph="SELECT * FRO... info" />
-            <marker date="1521791772651" expanded="true" signature="1787:1910" ph="SELECT i.cod... info" />
-            <marker date="1521791772651" expanded="true" signature="1793:1910" ph="select i.cod... info" />
-            <marker date="1521791772651" expanded="true" signature="3443:3516" ph="SELECT * FRO... focus" />
-            <marker date="1521791772651" expanded="true" signature="3480:3515" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="3601:3664" ph="INSERT INTO focus... " />
-            <marker date="1521791772651" expanded="true" signature="3629:3664" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="4188:4260" ph="DELETE FROM focus... " />
-            <marker date="1521791772651" expanded="true" signature="4224:4259" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="4791:4872" ph="SELECT note_... focus" />
-            <marker date="1521791772651" expanded="true" signature="4836:4871" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="5804:5889" ph="UPDATE focucs... " />
-            <marker date="1521791772651" expanded="true" signature="5853:5880" ph="SELECT id FR... info" />
-            <marker date="1521791772651" expanded="true" signature="5853:5888" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="637:655" ph="SELECT * FRO... info" />
+            <marker date="1521792222577" expanded="true" signature="1820:1943" ph="SELECT i.cod... info" />
+            <marker date="1521792222577" expanded="true" signature="1826:1943" ph="select i.cod... info" />
+            <marker date="1521792222577" expanded="true" signature="3476:3549" ph="SELECT * FRO... focus" />
+            <marker date="1521792222577" expanded="true" signature="3513:3548" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="3634:3697" ph="INSERT INTO focus... " />
+            <marker date="1521792222577" expanded="true" signature="3662:3697" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="4221:4293" ph="DELETE FROM focus... " />
+            <marker date="1521792222577" expanded="true" signature="4257:4292" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="4824:4905" ph="SELECT note_... focus" />
+            <marker date="1521792222577" expanded="true" signature="4869:4904" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="5890:5975" ph="UPDATE focucs... " />
+            <marker date="1521792222577" expanded="true" signature="5939:5966" ph="SELECT id FR... info" />
+            <marker date="1521792222577" expanded="true" signature="5939:5974" ph="SELECT id FR... info" />
           </folding>
         </state>
       </provider>

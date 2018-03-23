@@ -1,6 +1,7 @@
 import time
 import re
 import pymysql
+from urllib.parse import unquote
 
 route_list = []
 
@@ -172,6 +173,8 @@ def update(path_info):
 @create_route_list("/update/\d{6}/(.*)\.html")
 def update_note_info(path_info):
     code, note_info = re.match("/update/(\d{6})/(.*)\.html", path_info).group(1, 2)
+    # 对编辑的信息进行%转义
+    note_info = unquote(note_info)
     try:
         conn = pymysql.connect(host="localhost", port=3306, db="stock_db", user="root", password="1017", charset="utf8")
         cur = conn.cursor()
