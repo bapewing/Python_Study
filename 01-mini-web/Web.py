@@ -4,19 +4,21 @@ import re
 import threading
 import multiprocessing
 import gevent
+import sys
 
 monkey.patch_all()  # 将阻塞程序的函数变成非阻塞，从而实现协程
 
 
 class HTTPServer(object):
 
-    def __init__(self):
+    def __init__(self, port, func):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # 服务器重启地址重用
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server_socket.bind(("", 8080))
+        server_socket.bind(("", port))
         server_socket.listen(128)
         self.server_socket = server_socket
+        self.func = func
 
     def start(self):
         while True:
@@ -50,9 +52,9 @@ class HTTPServer(object):
             url_resource = "/index.html"
         # .py结尾就是请求动态资源
         if url_resource.endswith(".html"):
-            import Application
+            # import Application
             # Application模块一定要调用start_response函数，否则HTTPServer找不到response_header属性
-            response_body = Application.app({"PATH_INFO": url_resource}, self.start_response)
+            response_body = self.func({"PATH_INFO": url_resource}, self.start_response)
             response = (self.response_header + "\r\n" + response_body).encode()
             df_socket.send(response)
             df_socket.close()
@@ -80,8 +82,28 @@ class HTTPServer(object):
 
 
 def main():
-    hs = HTTPServer()
-    hs.start()
+    if len(sys.argv) < 3:
+        print("参数格式错误，参照:python3 Web.py 8080 Application:app")
+        return
+    if not sys.argv[1].isdigit():
+        print("参数格式错误，参照:python3 Web.py 8080 Application:app")
+        return
+    # 获取模块名和函数名
+    module = sys.argv[2]
+    module_list = module.split(":")
+    module_name = module_list[0]
+    module_func = module_list[1]
+
+    try:
+        mod = __import__(module_name)
+        func = getattr(mod, module_func)
+    except Exception as e:
+        print("异常信息:%s" % e)
+        return
+    else:
+        port = int(sys.argv[1])
+        hs = HTTPServer(port, func)
+        hs.start()
 
 
 if __name__ == '__main__':
