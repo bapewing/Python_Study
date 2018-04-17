@@ -43,6 +43,10 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+misc.xml
+modules.xml
+Python_Study.iml
+vcs.xml
 workspace.xml
 *.cover
 .hypothesis/
