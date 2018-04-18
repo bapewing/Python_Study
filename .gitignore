@@ -106,4 +106,4 @@ venv.bak/
 .idea
 *.py[cod]
 02-flask_project/logs/log*
-
+02-flask_project/migrations
