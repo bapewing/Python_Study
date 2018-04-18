@@ -3,6 +3,8 @@ import flask_sqlalchemy
 import flask_wtf
 import redis
 import flask_session
+import flask_script
+import flask_migrate
 
 
 # 添加项目相关配置
@@ -31,6 +33,10 @@ info_db = flask_sqlalchemy.SQLAlchemy(app)
 flask_wtf.csrf.CSRFProtect(app)
 redis_db = redis.StrictRedis(host=Config.REDIS_HOST, port=Config.REDIS_PORT)
 flask_session.Session(app)
+manager = flask_script.Manager(app)
+# 将app与db关联
+flask_migrate.Migrate(app, info_db)
+manager.add_command('db', flask_migrate.MigrateCommand)
 
 
 @app.route("/")
@@ -41,4 +47,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run()
+    manager.run()
