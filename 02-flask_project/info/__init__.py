@@ -8,10 +8,10 @@ import config
 
 
 app = flask.Flask(__name__)
-app.config.from_object(config.Config)
+app.config.from_object(config.config['development'])
 info_db = flask_sqlalchemy.SQLAlchemy(app)
 # 只做服务器验证工作，cookie中的 csrf_token 和表单中的 csrf_token 需要我们自己实现
 flask_wtf.csrf.CSRFProtect(app)
-redis_db = redis.StrictRedis(host=config.Config.REDIS_HOST, port=config.Config.REDIS_PORT)
+redis_db = redis.StrictRedis(host=config.config['development'].REDIS_HOST, port=config.config['development'].REDIS_PORT)
 flask_session.Session(app)
 manager = flask_script.Manager(app)
