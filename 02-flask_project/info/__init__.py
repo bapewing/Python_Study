@@ -35,6 +35,10 @@ def create_app(config_pattern):
     flask_wtf.csrf.CSRFProtect(app)
     redis_db = redis.StrictRedis(host=config.config['development'].REDIS_HOST, port=config.config['development'].REDIS_PORT)
     flask_session.Session(app)
+    # 注册index_blu
+    # 顶部导入蓝图的话，会出现循环导入的bug
+    from info.modules.index import index_blu
+    app.register_blueprint(index_blu)
 
     # 其实也可以返回元组 app, info_db
     return app
