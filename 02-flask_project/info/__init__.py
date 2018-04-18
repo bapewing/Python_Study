@@ -8,7 +8,10 @@ import logging
 import logging.handlers
 
 # 在Flask很多扩展里面都可以先初始化扩展的对象，然后再去调用 init_app 方法去初始化
-info_db = flask_sqlalchemy.SQLAlchemy()
+db = flask_sqlalchemy.SQLAlchemy()
+# Python3.6之后新增变量类型注释
+redis_db = None  # type:redis.StrictRedis
+# redis_db: redis.StrictRedis = None
 
 
 def setup_log(config_pattern):
@@ -30,9 +33,10 @@ def create_app(config_pattern):
     app = flask.Flask(__name__)
     app.config.from_object(config.config[config_pattern])
     # 通过app初始化
-    info_db.init_app(app)
+    db.init_app(app)
     # 只做服务器验证工作，cookie中的 csrf_token 和表单中的 csrf_token 需要我们自己实现
     flask_wtf.csrf.CSRFProtect(app)
+    global redis_db
     redis_db = redis.StrictRedis(host=config.config['development'].REDIS_HOST, port=config.config['development'].REDIS_PORT)
     flask_session.Session(app)
     # 注册index_blu
