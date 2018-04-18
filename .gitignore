@@ -43,11 +43,6 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-misc.xml
-modules.xml
-Python_Study.iml
-vcs.xml
-workspace.xml
 *.cover
 .hypothesis/
 .pytest_cache/
@@ -107,4 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+.idea
+*.py[cod]
 
