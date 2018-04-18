@@ -1,14 +1,18 @@
 import flask_migrate
+import flask_script
 import info
+
+app = info.create_app('development')
+manager = flask_script.Manager(app)
 # 将app与db关联
-flask_migrate.Migrate(info.app, info.info_db)
-info.manager.add_command('db', flask_migrate.MigrateCommand)
+flask_migrate.Migrate(app, info.info_db)
+manager.add_command('db', flask_migrate.MigrateCommand)
 
 
-@info.app.route("/")
+@app.route('/')
 def index():
     return "index"
 
 
 if __name__ == '__main__':
-    info.manager.run()
+    manager.run()
