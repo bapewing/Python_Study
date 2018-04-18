@@ -1,4 +1,5 @@
 import redis
+import logging
 
 
 # 添加项目相关配置
@@ -17,6 +18,8 @@ class Config(object):
     SESSION_USE_SIGNER = True
     SESSION_PERMANENT = False
     PERMANENT_SESSION_LIFETIME = 86400 * 3
+    # 设置日志等级
+    LOG_LEVEL = logging.DEBUG
 
 
 # TODO:类可以设置成私有类
@@ -25,7 +28,8 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    DEBUG = True
+    DEBUG = False
+    LOG_LEVEL = logging.WARNING
 
 
 class TestingConfig(Config):

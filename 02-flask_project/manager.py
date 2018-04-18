@@ -1,6 +1,7 @@
 import flask_migrate
 import flask_script
 import info
+import logging
 
 app = info.create_app('development')
 manager = flask_script.Manager(app)
