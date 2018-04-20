@@ -31,6 +31,7 @@ def create_app(config_pattern):
     # 配置日志
     setup_log(config_pattern)
     app = flask.Flask(__name__)
+    print(app.url_map)
     app.config.from_object(config.config[config_pattern])
     # 通过app初始化
     db.init_app(app)
