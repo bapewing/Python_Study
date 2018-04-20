@@ -1,5 +1,4 @@
-from info.modules.index import index_blu
-import info
+from . import index_blu
 import flask
 
 

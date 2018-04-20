@@ -40,10 +40,12 @@ def create_app(config_pattern):
     global redis_db
     redis_db = redis.StrictRedis(host=config.config['development'].REDIS_HOST, port=config.config['development'].REDIS_PORT)
     flask_session.Session(app)
-    # 注册index_blu
-    # 顶部导入蓝图的话，会出现循环导入的bug
+    # 注册相关蓝图
+    # 顶部导入蓝图的话，会出现循环导入的bug，解决：什么时候注册蓝图什么时候导入蓝图
     from info.modules.index import index_blu
     app.register_blueprint(index_blu)
+    from info.modules.passport import passport_blu
+    app.register_blueprint(passport_blu)
 
     # 其实也可以返回元组 app, info_db
     return app
