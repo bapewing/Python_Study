@@ -1,7 +1,7 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from info import constants
+from info.utils import constants
 from . import db
 
 
