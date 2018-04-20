@@ -43,8 +43,8 @@ def get_image_code():
         return response
 
 
-@passport_blu.route('/sms_code')
-def send_sms_code(errmsg=None):
+@passport_blu.route('/sms_code', methods=['POST'])
+def send_sms_code():
     """
     发送短信的逻辑
     1. 获取参数：手机号，图片验证码内容，图片验证码的编号 (随机值)
@@ -81,7 +81,8 @@ def send_sms_code(errmsg=None):
         # 验证通过，可以发送手机验证码了
         sms_code_str = "%06d" % random.randint(0, 999999)
         flask.current_app.logger.debug("短信验证码内容是：%s" % sms_code_str)
-        result = CCP().send_template_sms(mobile_phone, sms_code_str, constants.SMS_CODE_REDIS_EXPIRES/5, '1')
+        # bug：验证码和过期时间以数组形式传给第三方，属于文档阅读不仔细
+        result = CCP().send_template_sms(mobile_phone, [sms_code_str, constants.SMS_CODE_REDIS_EXPIRES/5], '1')
 
         if result != 0:
             return flask.jsonify(errno=RET.THIRDERR, errmsg='发送短信失败')

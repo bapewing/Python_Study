@@ -11,6 +11,8 @@ import logging.handlers
 db = flask_sqlalchemy.SQLAlchemy()
 # Python3.6之后新增变量类型注释
 redis_db = None  # type:redis.StrictRedis
+
+
 # redis_db: redis.StrictRedis = None
 
 
@@ -18,7 +20,7 @@ def setup_log(config_pattern):
     # 设置日志的记录等级
     logging.basicConfig(level=config.config[config_pattern].LOG_LEVEL)
     # 创建日志记录器，指明日志保存的路径、每个日志文件的最大大小、保存的日志文件个数上限
-    file_log_handler = logging.handlers.RotatingFileHandler("logs/log", maxBytes=1024*1024*100, backupCount=10)
+    file_log_handler = logging.handlers.RotatingFileHandler("logs/log", maxBytes=1024 * 1024 * 100, backupCount=10)
     # 创建日志记录的格式 日志等级 输入日志信息的文件名 行数 日志信息
     formatter = logging.Formatter('%(levelname)s %(filename)s:%(lineno)d %(message)s')
     # 为刚创建的日志记录器设置日志记录格式
@@ -36,9 +38,11 @@ def create_app(config_pattern):
     # 通过app初始化
     db.init_app(app)
     # 只做服务器验证工作，cookie中的 csrf_token 和表单中的 csrf_token 需要我们自己实现
-    flask_wtf.csrf.CSRFProtect(app)
+    # bug：不关闭保护的话，请求400
+    # flask_wtf.csrf.CSRFProtect(app)
     global redis_db
-    redis_db = redis.StrictRedis(host=config.config['development'].REDIS_HOST, port=config.config['development'].REDIS_PORT)
+    redis_db = redis.StrictRedis(host=config.config['development'].REDIS_HOST,
+                                 port=config.config['development'].REDIS_PORT, decode_responses=True)
     flask_session.Session(app)
     # 注册相关蓝图
     # 顶部导入蓝图的话，会出现循环导入的bug，解决：什么时候注册蓝图什么时候导入蓝图
