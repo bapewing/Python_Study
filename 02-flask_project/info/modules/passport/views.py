@@ -1,9 +1,11 @@
 import random
 import re
 
+import datetime
 import flask
 
-from info import redis_db
+from info import redis_db, db
+from info.models import User
 from info.utils import constants
 from info.utils.captcha.captcha import captcha
 from info.utils.response_code import RET
@@ -82,7 +84,7 @@ def send_sms_code():
         sms_code_str = "%06d" % random.randint(0, 999999)
         flask.current_app.logger.debug("短信验证码内容是：%s" % sms_code_str)
         # bug：验证码和过期时间以数组形式传给第三方，属于文档阅读不仔细
-        result = CCP().send_template_sms(mobile_phone, [sms_code_str, constants.SMS_CODE_REDIS_EXPIRES/5], '1')
+        result = CCP().send_template_sms(mobile_phone, [sms_code_str, constants.SMS_CODE_REDIS_EXPIRES / 5], '1')
 
         if result != 0:
             return flask.jsonify(errno=RET.THIRDERR, errmsg='发送短信失败')
@@ -94,3 +96,56 @@ def send_sms_code():
                 flask.current_app.logger(e)
                 return flask.jsonify(errno=RET.DBERR, errmsg='数据保存失败')
             return flask.jsonify(errno=RET.OK, errmsg='发送成功')
+
+
+@passport_blu.route('/register', methods=['POST'])
+def register():
+    """
+    注册的逻辑
+    1. 获取参数
+    2. 校验参数
+    3. 取到服务器保存的真实的短信验证码内容
+    4. 校验用户输入的短信验证码内容和真实验证码内容是否一致
+    5. 如果一致，初始化 User 模型，并且赋值属性
+    6. 将 user 模型添加数据库
+    7. 返回响应
+    """
+    parameters = flask.request.json
+    mobile_phone = parameters.get('mobile')
+    sms_code = parameters.get('smscode')
+    # TODO:代码不能明文传输
+    password = parameters.get('password')
+
+    if not all([mobile_phone, sms_code, password]):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+    if not re.match('1[35678]\\d{9}', mobile_phone):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='手机号格式不正确')
+    try:
+        real_sms_code = redis_db.get('SMS' + mobile_phone)
+    except Exception as e:
+        flask.current_app.logger(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+    else:
+        if real_sms_code != sms_code:
+            return flask.jsonify(errno=RET.DATAERR, errmsg='验证码过期')
+
+        user = User()
+        user.mobile = mobile_phone
+        user.nick_name = mobile_phone
+        user.last_login = datetime.datetime.now()
+        # TODO: 对密码处理
+
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            flask.current_app.logger(e)
+            return flask.jsonify(errno=RET.DBERR, errmsg='数据库保存错误')
+        else:
+
+            flask.session['user_id'] = user.id
+            flask.session['mobile'] = user.mobile
+            flask.session['nick_name'] = user.nick_name
+
+            return flask.jsonify(errno=RET.OK, errmsg='注册成功')
