@@ -115,7 +115,7 @@ def register():
     parameters = flask.request.json
     mobile_phone = parameters.get('mobile')
     sms_code = parameters.get('smscode')
-    password = parameters.get('password') # TODO:js中进行明文传输吗？
+    password = parameters.get('password')  # TODO:js中进行明文传输吗？
 
     if not all([mobile_phone, sms_code, password]):
         return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
@@ -178,3 +178,12 @@ def login():
     flask.session['nick_name'] = user.nick_name
 
     return flask.jsonify(errno=RET.OK, errmsg='登录成功')
+
+
+@passport_blu.route('/logout')
+def logout():
+    flask.session.pop('user_id', None)
+    flask.session.pop('mobile', None)
+    flask.session.pop('nick_name')
+
+    return flask.jsonify(errno=RET.OK, errmsg='退出成功')

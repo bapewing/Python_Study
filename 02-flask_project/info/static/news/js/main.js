@@ -138,7 +138,6 @@ $(function(){
                    $("#register-password-err").show()
                }
            }
-
        })
     })
 
@@ -259,6 +258,12 @@ function sendSMSCode() {
                 $(".get_code").attr("onclick", "sendSMS(code)")
             }
         }
+    })
+}
+
+function logout() {
+    $.get('/passport/logout',function (response) {
+        location.reload()
     })
 }
 
