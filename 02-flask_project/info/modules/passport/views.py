@@ -1,3 +1,4 @@
+import logging
 import random
 import re
 
@@ -82,7 +83,9 @@ def send_sms_code():
             return flask.jsonify(error=RET.DATAERR, errmsg='输入验证码错误')
         # 验证通过，可以发送手机验证码了
         sms_code_str = "%06d" % random.randint(0, 999999)
-        flask.current_app.logger.debug("短信验证码内容是：%s" % sms_code_str)
+        # TODO:用这个老是报错呢？
+        # flask.current_app.logger.debug("短信验证码内容是：%s" % sms_code_str)
+        print("短信验证码内容是：%s" % sms_code_str)
         # bug：验证码和过期时间以数组形式传给第三方，属于文档阅读不仔细
         # result = CCP().send_template_sms(mobile_phone, [sms_code_str, constants.SMS_CODE_REDIS_EXPIRES / 5], '1')
         #
@@ -91,7 +94,7 @@ def send_sms_code():
         # else:
         try:
             # 手机号作为key
-            redis_db.set('SMS_' + mobile_phone, sms_code_str, constants.SMS_CODE_REDIS_EXPIRES)
+            redis_db.set(mobile_phone, sms_code_str, constants.SMS_CODE_REDIS_EXPIRES)
         except Exception as e:
             flask.current_app.logger(e)
             return flask.jsonify(errno=RET.DBERR, errmsg='数据保存失败')
@@ -121,7 +124,7 @@ def register():
     if not re.match('1[35678]\\d{9}', mobile_phone):
         return flask.jsonify(errno=RET.PARAMERR, errmsg='手机号格式不正确')
     try:
-        real_sms_code = redis_db.get('SMS' + mobile_phone)
+        real_sms_code = redis_db.get(mobile_phone)
     except Exception as e:
         flask.current_app.logger(e)
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
@@ -148,4 +151,4 @@ def register():
         #     flask.session['mobile'] = user.mobile
         #     flask.session['nick_name'] = user.nick_name
 
-            return flask.jsonify(errno=RET.OK, errmsg='注册成功')
+        return flask.jsonify(errno=RET.OK, errmsg='注册成功')

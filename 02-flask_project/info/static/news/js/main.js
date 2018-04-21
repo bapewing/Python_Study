@@ -123,7 +123,6 @@ $(function(){
     })
 
 
-    // TODO 注册按钮点击
     $(".register_form_con").submit(function (e) {
         // 阻止默认提交操作
         e.preventDefault()
@@ -154,6 +153,29 @@ $(function(){
         }
 
         // 发起注册请求
+        var parameters = {
+            'mobile': mobile,
+            'smscode': smscode,
+            'password': password
+        }
+
+        $.ajax({
+            url: "/passport/register",
+            type: "post",
+            data: JSON.stringify(parameters),
+            contentType: 'application/json',
+            success: function (response) {
+                if(response.errno == 0){
+                    alert('注册成功')
+                }else {
+                    alert(response.errmsg)
+                    $("#register-password-err").html(resp.errmsg)
+                    $("#register-password-err").show()
+
+                }
+
+            }
+        })
 
     })
 })
