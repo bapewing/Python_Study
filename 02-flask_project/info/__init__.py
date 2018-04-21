@@ -3,6 +3,8 @@ import flask_sqlalchemy
 import flask_wtf
 import redis
 import flask_session
+from flask_wtf.csrf import generate_csrf
+
 import config
 import logging
 import logging.handlers
@@ -33,17 +35,28 @@ def create_app(config_pattern):
     # 配置日志
     setup_log(config_pattern)
     app = flask.Flask(__name__)
-    print(app.url_map)
     app.config.from_object(config.config[config_pattern])
     # 通过app初始化
     db.init_app(app)
-    # 只做服务器验证工作，cookie中的 csrf_token 和表单中的 csrf_token 需要我们自己实现
+    # 帮我们做了：从cookie中取出随机值，从表单中取出随机，然后进行校验，并且响应校验结果
+    # 我们需要做：1. 在返回响应的时候，往cookie中添加一个csrf_token，2. 并且在表单中添加一个隐藏的csrf_token
+    # 而我们现在登录或者注册不是使用的表单，而是使用 ajax 请求，所以我们需要在 ajax 请求的时候带上 csrf_token 这个随机值就可以了
+    # 请求服务器使用post，put，delete等需要修改服务器数据的操作都需要csrf保护
     # bug：不关闭保护的话，请求400
-    # flask_wtf.csrf.CSRFProtect(app)
+    flask_wtf.csrf.CSRFProtect(app)
     global redis_db
     redis_db = redis.StrictRedis(host=config.config['development'].REDIS_HOST,
                                  port=config.config['development'].REDIS_PORT, decode_responses=True)
     flask_session.Session(app)
+
+    # CSRF凡是请求除了get都需要用到，所以需要统一在hook时设置
+    # bug：400 需要将设置在 flask_session.Session(app)之后，否则发送请求时使用到redis数据库会报错
+    @app.after_request
+    def after_request(response):
+        csrf_token = generate_csrf()
+        response.set_cookie('csrf_token', csrf_token)
+        return response
+
     # 注册相关蓝图
     # 顶部导入蓝图的话，会出现循环导入的bug，解决：什么时候注册蓝图什么时候导入蓝图
     from info.modules.index import index_blu

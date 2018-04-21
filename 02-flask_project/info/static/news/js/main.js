@@ -129,6 +129,9 @@ $(function(){
            type: "post",
            data: JSON.stringify(parameters),
            contentType: "application/json",
+           headers: {
+             'X-CSRFToken': getCookie('csrf_token')
+           },
            success: function (response) {
                if(response.errno == 0){
                    location.reload()
@@ -183,6 +186,9 @@ $(function(){
             type: "post",
             data: JSON.stringify(parameters),
             contentType: 'application/json',
+            headers: {
+             'X-CSRFToken': getCookie('csrf_token')
+           },
             success: function (response) {
                 if(response.errno == 0){
                     location.reload()
@@ -239,6 +245,9 @@ function sendSMSCode() {
         type: "post",
         data: JSON.stringify(parameters),
         contentType: "application/json",
+        headers: {
+             'X-CSRFToken': getCookie('csrf_token')
+        },
         success: function (response) {
             if(response.errno == 0){
                 var num = 60;
