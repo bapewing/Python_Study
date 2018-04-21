@@ -95,7 +95,7 @@ def send_sms_code():
             # 手机号作为key
             redis_db.set(mobile_phone, sms_code_str, constants.SMS_CODE_REDIS_EXPIRES)
         except Exception as e:
-            flask.current_app.logger(e)
+            flask.current_app.logger.error(e)
             return flask.jsonify(errno=RET.DBERR, errmsg='数据保存失败')
         return flask.jsonify(errno=RET.OK, errmsg='发送成功')
 
@@ -124,7 +124,7 @@ def register():
     try:
         real_sms_code = redis_db.get(mobile_phone)
     except Exception as e:
-        flask.current_app.logger(e)
+        flask.current_app.error.logger(e)
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
     else:
         if real_sms_code != sms_code:
@@ -145,7 +145,7 @@ def register():
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            flask.current_app.logger(e)
+            flask.current_app.logger.error(e)
             return flask.jsonify(errno=RET.DBERR, errmsg='数据库保存失败')
         else:
             flask.session['user_id'] = user.id
@@ -170,7 +170,7 @@ def login():
     try:
         user = User.query.filter(User.mobile == mobile).first()
     except Exception as e:
-        flask.current_app.logger(e)
+        flask.current_app.logger.error(e)
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
     if not user:
         return flask.jsonify(errno=RET.NODATA, errmsg='用户不存在')
@@ -189,7 +189,7 @@ def login():
     #     db.session.commit()
     # except Exception as e:
     #     db.session.rollback()
-    #     flask.current_app.logger(e)
+    #     flask.current_app.logger.error(e)
 
     return flask.jsonify(errno=RET.OK, errmsg='登录成功')
 
