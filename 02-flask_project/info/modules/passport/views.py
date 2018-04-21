@@ -132,23 +132,22 @@ def register():
         if real_sms_code != sms_code:
             return flask.jsonify(errno=RET.DATAERR, errmsg='验证码过期')
 
-        # user = User()
-        # user.mobile = mobile_phone
-        # user.nick_name = mobile_phone
-        # user.last_login = datetime.datetime.now()
-        # # TODO: 对密码处理
-        #
-        # try:
-        #     db.session.add(user)
-        #     db.session.commit()
-        # except Exception as e:
-        #     db.session.rollback()
-        #     flask.current_app.logger(e)
-        #     return flask.jsonify(errno=RET.DBERR, errmsg='数据库保存错误')
-        # else:
-        #
-        #     flask.session['user_id'] = user.id
-        #     flask.session['mobile'] = user.mobile
-        #     flask.session['nick_name'] = user.nick_name
+        user = User()
+        user.mobile = mobile_phone
+        user.nick_name = mobile_phone
+        user.password = password
+        user.last_login = datetime.datetime.now()
 
-        return flask.jsonify(errno=RET.OK, errmsg='注册成功')
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            flask.current_app.logger(e)
+            return flask.jsonify(errno=RET.DBERR, errmsg='数据库保存失败')
+        else:
+            flask.session['user_id'] = user.id
+            flask.session['mobile'] = user.mobile
+            flask.session['nick_name'] = user.nick_name
+
+            return flask.jsonify(errno=RET.OK, errmsg='注册成功')
