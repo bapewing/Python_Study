@@ -103,7 +103,6 @@ $(function(){
 		$(this).find('a')[0].click()
 	})
 
-    // TODO 登录表单提交
     $(".login_form_con").submit(function (e) {
         e.preventDefault()
         var mobile = $(".login_form #mobile").val()
@@ -120,6 +119,27 @@ $(function(){
         }
 
         // 发起登录请求
+       var parameters = {
+            'mobile': mobile,
+            'password': password
+       }
+
+       $.ajax({
+           url: "/passport/login",
+           type: "post",
+           data: JSON.stringify(parameters),
+           contentType: "application/json",
+           success: function (response) {
+               if(response.errno == 0){
+                   location.reload()
+               } else {
+                   alert(response.errmsg)
+                   $("#register-password-err").html(resp.errmsg)
+                   $("#register-password-err").show()
+               }
+           }
+
+       })
     })
 
 
@@ -166,7 +186,7 @@ $(function(){
             contentType: 'application/json',
             success: function (response) {
                 if(response.errno == 0){
-                    alert('注册成功')
+                    location.reload()
                 }else {
                     alert(response.errmsg)
                     $("#register-password-err").html(resp.errmsg)

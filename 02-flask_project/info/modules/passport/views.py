@@ -1,4 +1,3 @@
-import logging
 import random
 import re
 
@@ -116,8 +115,7 @@ def register():
     parameters = flask.request.json
     mobile_phone = parameters.get('mobile')
     sms_code = parameters.get('smscode')
-    # TODO:代码不能明文传输
-    password = parameters.get('password')
+    password = parameters.get('password') # TODO:js中进行明文传输吗？
 
     if not all([mobile_phone, sms_code, password]):
         return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
@@ -151,3 +149,32 @@ def register():
             flask.session['nick_name'] = user.nick_name
 
             return flask.jsonify(errno=RET.OK, errmsg='注册成功')
+
+
+@passport_blu.route('/login', methods=['POST'])
+def login():
+    parameters = flask.request.json
+    mobile = parameters.get('mobile', None)
+    password = parameters.get('password', None)
+
+    if not all([mobile, password]):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+    if not re.match('1[35678]\\d{9}', mobile):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='手机号格式不正确')
+
+    # 校验密码时，先查询当前手机号否注册过
+    try:
+        user = User.query.filter(User.mobile == mobile).first()
+    except Exception as e:
+        flask.current_app.logger(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+    if not user:
+        return flask.jsonify(errno=RET.NODATA, errmsg='用户不存在')
+    if not user.check_passowrd(password):
+        return flask.jsonify(errno=RET.PWDERR, errmsg='用户名或密码输入错误')
+
+    flask.session['user_id'] = user.id
+    flask.session['mobile'] = user.mobile
+    flask.session['nick_name'] = user.nick_name
+
+    return flask.jsonify(errno=RET.OK, errmsg='登录成功')
