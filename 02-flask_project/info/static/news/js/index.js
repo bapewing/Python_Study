@@ -41,7 +41,13 @@ $(function () {
         var nowScroll = $(document).scrollTop();
 
         if ((canScrollHeight - nowScroll) < 100) {
-            // TODO 判断页数，去更新新闻数据
+            if (!data_querying){
+                data_querying = true;
+                if (cur_page < total_page) {
+                    cur_page += 1
+                    updateNewsData()
+                }
+            }
         }
     })
 })
@@ -51,34 +57,32 @@ function updateNewsData() {
         'cid': currentCid,
         'page': cur_page
     }
-
-    $.ajax({
-        url: '/news_list',
-        type: 'get',
-        data: JSON.stringify(parameters),
-        contentType: 'application/json',
-        success: function (response) {
-            if(response.errno == 0){
-                // 切换页时需要清空
-                if(cur_page = 1){
-                    $('.list_con').html('')
-                }
-                for (var i=0;i<response.data.per_news.length;i++) {
-                    var news = response.data.per_news[i]
-                    var content = '<li>'
-                    content += '<a href="#" class="news_pic fl"><img src="' + news.index_image_url + '?imageView2/1/w/170/h/170"></a>'
-                    content += '<a href="#" class="news_title fl">' + news.title + '</a>'
-                    content += '<a href="#" class="news_detail fl">' + news.digest + '</a>'
-                    content += '<div class="author_info fl">'
-                    content += '<div class="source fl">来源：' + news.source + '</div>'
-                    content += '<div class="time fl">' + news.create_time + '</div>'
-                    content += '</div>'
-                    content += '</li>'
-                    $(".list_con").append(content)
-                }
-            } else {
-                alert(response.errmsg)
+    
+    $.get('/news_list', parameters, function (response) {
+        // TODO: 此处逻辑有点乱，标识不能放在判断内？
+        data_querying = false
+        if (response.errno == 0){
+            total_page = response.data.total_page
+            // 切换时需要清空一页的数据
+            if (cur_page == 1) {
+                $(".list_con").html('')
             }
+            // 显示数据
+            for (var i=0;i<response.data.per_news.length;i++) {
+                var news = response.data.per_news[i]
+                var content = '<li>'
+                content += '<a href="#" class="news_pic fl"><img src="' + news.index_image_url + '?imageView2/1/w/170/h/170"></a>'
+                content += '<a href="#" class="news_title fl">' + news.title + '</a>'
+                content += '<a href="#" class="news_detail fl">' + news.digest + '</a>'
+                content += '<div class="author_info fl">'
+                content += '<div class="source fl">来源：' + news.source + '</div>'
+                content += '<div class="time fl">' + news.create_time + '</div>'
+                content += '</div>'
+                content += '</li>'
+                $(".list_con").append(content)
+            }
+        } else {
+            alert(response.errmsg)
         }
     })
 
