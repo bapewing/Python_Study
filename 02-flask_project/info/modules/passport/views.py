@@ -130,6 +130,10 @@ def register():
         if real_sms_code != sms_code:
             return flask.jsonify(errno=RET.DATAERR, errmsg='验证码过期')
 
+        # 用户已经注册，停止往数据库插入数据
+        if User.query.filter(User.mobile == mobile_phone).first():
+            return flask.jsonify(errno=RET.DATAEXIST, errmsg='用户已经注册')
+
         user = User()
         user.mobile = mobile_phone
         user.nick_name = mobile_phone
