@@ -1,4 +1,4 @@
-from info.models import User, News
+from info.models import User, News, Category
 from info.utils import constants
 from info.utils.response_code import RET
 from . import index_blu
@@ -27,9 +27,15 @@ def index():
     for news in news_model_list:
         news_json_list.append(news.to_dict())
 
+    category_model_list = Category.query.all()
+    category_json_list = []
+    for category in category_model_list:
+        category_json_list.append(category.to_dict())
+
     data = {
         'user': user.to_dict() if user else None,
-        'news': news_json_list
+        'news': news_json_list,
+        'categories': category_json_list
     }
     return flask.render_template('news/index.html', data=data)
 
