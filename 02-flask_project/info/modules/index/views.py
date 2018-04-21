@@ -1,4 +1,5 @@
-from info.models import User
+from info.models import User, News
+from info.utils import constants
 from . import index_blu
 import flask
 
@@ -13,8 +14,21 @@ def index():
             user = User.query.get(user_id)
         except Exception as e:
             flask.current_app.logger(e)
+
+    news_model_list = []
+    try:
+        news_model_list = News.query.order_by(News.clicks.desc()).limit(constants.USER_COLLECTION_MAX_NEWS)
+    except Exception as e:
+        flask.current_app.logger(e)
+
+    # 对象列表转成字典列表
+    news_json_list = []
+    for news in news_model_list:
+        news_json_list.append(news.to_dict())
+
     data = {
-        'user': user.to_dict() if user else None
+        'user': user.to_dict() if user else None,
+        'news': news_json_list
     }
     return flask.render_template('news/index.html', data=data)
 
