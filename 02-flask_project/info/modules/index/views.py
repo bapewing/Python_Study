@@ -62,15 +62,29 @@ def news_list():
         flask.current_app.logger.error(e)
         return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
 
-    df_filters = []
-    if cid != 1:
-        df_filters.append(News.category_id == cid)
-    # TODO: 这个地方思路有点乱，复习这个属性？
-    try:
-        page_news = News.query.filter(*df_filters).order_by(News.create_time.desc()).paginate(page, per_page, False)
-    except Exception as e:
-        flask.current_app.logger.error(e)
-        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+    # df_filters = []
+    # if cid != 1:
+    #     df_filters.append(News.category_id == cid)
+    # try:
+    #     page_news = News.query.filter(*df_filters).order_by(News.create_time.desc()).paginate(page, per_page, False)
+    # except Exception as e:
+    #     flask.current_app.logger.error(e)
+    #     return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    # 解决：当cid==1时，不需要filter，而是将数据库中所有最新的6条数据取出，同上执行效果
+    # paginate源码 参考 BaseQuery类
+    if cid == 1:
+        try:
+            page_news = News.query.order_by(News.create_time.desc()).paginate(page, per_page, False)
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+    else:
+        try:
+            page_news = News.query.filter(News.category_id == cid).order_by(News.create_time.desc()).paginate(page, per_page, False)
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
 
     news_model_list = page_news.items
     total_page = page_news.pages

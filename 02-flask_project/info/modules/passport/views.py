@@ -23,7 +23,8 @@ def get_image_code():
     4. 保存图片验证码文字内容到redis
     5. 返回验证码图片
     """
-    # TODO:复习request的args属性
+    # 请求参数可以通过.com/image_code?imageCodeId=xxxxx 发送
+    # 通过request.args()获取参数的内容，每次只能取一个key对应的值
     image_code_id = flask.request.args.get('imageCodeId', None)
 
     if not image_code_id:
@@ -34,7 +35,6 @@ def get_image_code():
     try:
         redis_db.set('imageCodeId' + image_code_id, text, constants.IMAGE_CODE_REDIS_EXPIRES)
     except Exception as e:
-        # TODO:复习logger属性
         flask.current_app.looger.error(e)
         # 存不进去属于服务器错误
         flask.abort(500)
@@ -82,9 +82,8 @@ def send_sms_code():
             return flask.jsonify(error=RET.DATAERR, errmsg='输入验证码错误')
         # 验证通过，可以发送手机验证码了
         sms_code_str = "%06d" % random.randint(0, 999999)
-        # TODO:用这个老是报错呢？
-        # flask.current_app.logger.debug("短信验证码内容是：%s" % sms_code_str)
-        print("短信验证码内容是：%s" % sms_code_str)
+        # 不去搞和这个编码问题，直接变量
+        flask.current_app.logger.debug(sms_code_str)
         # bug：验证码和过期时间以数组形式传给第三方，属于文档阅读不仔细
         # result = CCP().send_template_sms(mobile_phone, [sms_code_str, constants.SMS_CODE_REDIS_EXPIRES / 5], '1')
         #
