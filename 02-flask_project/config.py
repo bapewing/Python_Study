@@ -24,7 +24,6 @@ class Config(object):
     LOG_LEVEL = logging.DEBUG
 
 
-# TODO:类可以设置成私有类
 class DevelopmentConfig(Config):
     DEBUG = True
 

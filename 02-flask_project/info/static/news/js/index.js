@@ -59,7 +59,7 @@ function updateNewsData() {
     }
     
     $.get('/news_list', parameters, function (response) {
-        // TODO: 此处逻辑有点乱，标识不能放在判断内？
+        // 请求返回的错误状态码是什么都需要重置刷新状态
         data_querying = false
         if (response.errno == 0){
             total_page = response.data.total_page

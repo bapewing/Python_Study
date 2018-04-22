@@ -114,7 +114,7 @@ def register():
     parameters = flask.request.json
     mobile_phone = parameters.get('mobile')
     sms_code = parameters.get('smscode')
-    password = parameters.get('password')  # TODO:js中进行明文传输吗？
+    password = parameters.get('password')  # TODO: ajax请求加密？
 
     if not all([mobile_phone, sms_code, password]):
         return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')

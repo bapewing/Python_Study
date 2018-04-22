@@ -36,7 +36,7 @@ $(function(){
 	// $('.form_group').on('click focusin',function(){
 	// 	$(this).children('.input_tip').animate({'top':-5,'font-size':12},'fast').siblings('input').focus().parent().addClass('hotline');
 	// })
-    // TODO: JS报错问题
+    // TODO: JS报错问题,看不懂什么引起的。
         $('.form_group').on('click',function(){
         $(this).children('input').focus()
     })
