@@ -1,6 +1,7 @@
 import flask
 
-from info.models import User, News
+from info import db
+from info.models import User, News, Comment
 from info.utils import constants
 from info.utils.common import user_login_data
 from info.utils.response_code import RET
@@ -87,3 +88,55 @@ def collect():
             user.collection_news.remove(news)
 
     return flask.jsonify(errno=RET.OK, errmsg='操作成功')
+
+
+@news_blu.route('/news_comment', methods=['POST'])
+@user_login_data
+def post_comment():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+
+    parameters = flask.request.json
+    news_id = parameters.get('news_id', None)
+    comment = parameters.get('comment', None)
+    parent_id = parameters.get('parent_id', None)
+
+    if not all([news_id, comment]):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        news_id = int(news_id)
+        if parent_id:
+            parent_id = int(parent_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        news_model = News.query.get(news_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    if not news_model:
+        return flask.jsonify(errno=RET.NODATA, errmsg='未查询到新闻数据')
+
+    comment_model = Comment()
+    comment_model.user_id = user.id
+    comment_model.news_id = news_id
+    comment_model.content = comment
+    if parent_id:
+        comment_model.parent_id = parent_id
+
+    # 注意：没有使用SQLALCHEMY自动commit的功能是因为执行完retun才会进行数据commit
+    # return时需要使用到评论的id
+    try:
+        db.session.add(comment_model)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库插入错误')
+    # TODO:修改js中data名
+    return flask.jsonify(errno=RET.OK, errmsg='评论成功', data=comment_model.to_dict())

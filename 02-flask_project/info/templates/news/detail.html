@@ -29,11 +29,11 @@
             登录发表你的评论
         </div>
 
-        {% if data.user_info %}
-            <form action="" class="comment_form" data-newsid="{{ data.news.id }}">
+        {% if data.user %}
+            <form action="" class="comment_form" data-newsid="{{ data.detail_news.id }}">
                 <div class="person_pic">
-                    <img src="{% if data.user_info.avatar_url %}
-                        {{ data.user_info.avatar_url }}
+                    <img src="{% if data.user.avatar_url %}
+                        {{ data.user.avatar_url }}
                     {% else %}
                         ../../static/news/images/person01.png
                     {% endif %}" alt="用户图标">
