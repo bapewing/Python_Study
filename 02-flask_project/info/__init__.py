@@ -66,6 +66,8 @@ def create_app(config_pattern):
     app.register_blueprint(index_blu)
     from info.modules.passport import passport_blu
     app.register_blueprint(passport_blu)
+    from info.modules.news import news_blu
+    app.register_blueprint(news_blu)
 
     # 其实也可以返回元组 app, info_db
     return app
