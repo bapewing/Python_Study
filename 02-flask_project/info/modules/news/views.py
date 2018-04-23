@@ -10,6 +10,7 @@ from . import news_blu
 @user_login_data
 def news_detail(news_id):
     user = flask.g.user
+    # 排行榜数据显示
     news_model_list = []
     try:
         news_model_list = News.query.order_by(News.create_time.desc()).limit(constants.CLICK_RANK_MAX_NEWS)
@@ -20,6 +21,7 @@ def news_detail(news_id):
     for news in news_model_list:
         news_json_list.append(news.to_basic_dict())
 
+    # 新闻详情展示
     news_model = None
     try:
         news_model = News.query.get(news_id)
@@ -29,9 +31,12 @@ def news_detail(news_id):
         flask.abort(404)
     news_model.clicks += 1
 
+    is_collected = True
+
     data = {
         'user': user.to_dict() if user else None,
         'news': news_json_list,
-        'detail_news': news_model.to_dict()
+        'detail_news': news_model.to_dict(),
+        'is_collected': is_collected
     }
     return flask.render_template('news/detail.html', data=data)
