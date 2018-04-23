@@ -3,6 +3,7 @@ import flask
 from info.models import User, News
 from info.utils import constants
 from info.utils.common import user_login_data
+from info.utils.response_code import RET
 from . import news_blu
 
 
@@ -31,7 +32,12 @@ def news_detail(news_id):
         flask.abort(404)
     news_model.clicks += 1
 
-    is_collected = True
+    is_collected = False
+    # 用户登录后才允许收藏和取消收藏
+    if user:
+        # collection_news 后面可以不用加all，因为sqlalchemy会在使用的时候去自动加载（getter懒加载）
+        if news_model in user.collection_news:
+            is_collected = True
 
     data = {
         'user': user.to_dict() if user else None,
@@ -40,3 +46,44 @@ def news_detail(news_id):
         'is_collected': is_collected
     }
     return flask.render_template('news/detail.html', data=data)
+
+
+@news_blu.route('/news_collect', methods=['POST'])
+@user_login_data
+def collect():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+    parameters = flask.request.json
+    news_id = parameters.get('news_id')
+    action = parameters.get('action')
+    if not all([news_id, action]):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+    if action not in ['collect', 'cancel_collect']:
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        news_id = int(news_id)  # 保证news_id为整数
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+    # 查询新闻是否存在
+    try:
+        news = News.query.get(news_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    if not news:
+        return flask.jsonify(errno=RET.NODATA, errmsg='未查询到该新闻数据')
+    # 开始执行数据库操作
+    if action == 'collect':
+        if news not in user.collection_news:
+            user.collection_news.append(news)
+        else:
+            return flask.jsonify(errno=RET.DATAEXIST, errmsg='已经收藏')
+    else:
+        if news in user.collection_news:
+            user.collection_news.remove(news)
+
+    return flask.jsonify(errno=RET.OK, errmsg='操作成功')

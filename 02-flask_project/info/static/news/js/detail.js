@@ -13,14 +13,62 @@ $(function(){
 
     // 收藏
     $(".collection").click(function () {
-
-       
+        var parameters = {
+            'news_id': $(this).attr('data-newid'),
+            'action': 'collect'
+        }
+        $.ajax({
+            url: '/news/news_collect',
+            type: 'post',
+            data: JSON.stringify(parameters),
+            contentType: 'application/json',
+            headers: {
+             'X-CSRFToken': getCookie('csrf_token')
+           },
+            success: function (response) {
+                if (response.errno == 0){
+                    // 隐藏收藏按钮
+                    $(".collection").hide();
+                    // 显示取消收藏按钮
+                    $(".collected").show();
+                } else if (response.errno == "4101"){
+                    // 未登录，弹出登录框
+                    $('.login_form_con').show();
+                }else{
+                    alert(response.errmsg);
+                }
+            }
+        })
     })
 
     // 取消收藏
     $(".collected").click(function () {
-
-     
+        var parameters = {
+            'news_id': $(this).attr('data-newid'),
+            'action': 'cancel_collect'
+        }
+        $.ajax({
+            url: '/news/news_collect',
+            type: 'post',
+            data: JSON.stringify(parameters),
+            contentType: 'application/json',
+            headers: {
+             'X-CSRFToken': getCookie('csrf_token')
+           },
+            success: function (response) {
+                if (response.errno == 0){
+                    // 隐藏收藏按钮
+                    $(".collection").show();
+                    // 显示取消收藏按钮
+                    $(".collected").hide();
+                } else if (response.errno == "4101"){
+                    // 未登录，弹出登录框
+                    $('.login_form_con').show();
+                }else{
+                    alert(response.errmsg);
+                }
+            }
+        })
     })
 
         // 评论提交
