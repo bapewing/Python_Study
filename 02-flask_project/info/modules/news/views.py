@@ -152,8 +152,11 @@ def post_comment():
         db.session.rollback()
         flask.current_app.logger.error(e)
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库插入错误')
-    # TODO:修改js中data名
-    return flask.jsonify(errno=RET.OK, errmsg='评论成功', data=comment_model.to_dict())
+    data = {
+        'comment': comment_model.to_dict()
+    }
+
+    return flask.jsonify(errno=RET.OK, errmsg='评论成功', data=data)
 
 
 @news_blu.route('/comment_like')

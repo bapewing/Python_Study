@@ -7,7 +7,7 @@ import flask
 
 
 @index_blu.route('/')
-@user_login_data
+@user_login_data  # index = user_login_data(index)
 def index():
     # 判断用户是否登录逻辑
     user = flask.g.user

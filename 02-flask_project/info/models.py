@@ -171,6 +171,7 @@ class Comment(BaseModel, db.Model):
             "create_time": self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             "content": self.content,
             "parent": self.parent.to_dict() if self.parent else None,
+            # TODO: 冗余字段返回需要的值
             "user": User.query.get(self.user_id).to_dict(),
             "news_id": self.news_id,
             "like_count": self.like_count

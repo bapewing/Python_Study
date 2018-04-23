@@ -94,7 +94,7 @@ $(function(){
             data: JSON.stringify(parameters),
             success: function (resp) {
                 if (resp.errno == '0') {
-                    var comment = resp.data
+                    var comment = resp.data.comment
                     // 拼接内容
                     var comment_html = ''
                     comment_html += '<div class="comment_list">'
@@ -187,7 +187,7 @@ $(function(){
                 data: JSON.stringify(params),
                 success: function (resp) {
                     if (resp.errno == "0") {
-                        var comment = resp.data
+                        var comment = resp.data.comment
                         // 拼接内容
                         var comment_html = ""
                         comment_html += '<div class="comment_list">'
@@ -246,7 +246,7 @@ $(function(){
 
 
 function update_comments_count() {
-    // 评论数根据标签个数获取
+    // 评论数根据标签个数获取.
     var count = $('.comment_list').length
     $('.comment_count').html(count + '条评论')
 }

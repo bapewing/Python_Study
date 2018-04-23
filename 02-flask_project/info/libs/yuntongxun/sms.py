@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 
-# TODO: 到底以什么样的导入方式导入呢？
 from CCPRestSDK import REST
 
 # 说明：主账号，登陆云通讯网站后，可在"控制台-应用"中看到开发者主账号ACCOUNT SID
