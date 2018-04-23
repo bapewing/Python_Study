@@ -1,21 +1,16 @@
 from info.models import User, News, Category
 from info.utils import constants
+from info.utils.common import user_login_data
 from info.utils.response_code import RET
 from . import index_blu
 import flask
 
 
 @index_blu.route('/')
+@user_login_data
 def index():
     # 判断用户是否登录逻辑
-    user_id = flask.session.get('user_id')
-    user = None
-    if user_id:
-        try:
-            user = User.query.get(user_id)
-        except Exception as e:
-            flask.current_app.logger(e)
-
+    user = flask.g.user
     news_model_list = []
     try:
         news_model_list = News.query.order_by(News.clicks.desc()).limit(constants.USER_COLLECTION_MAX_NEWS)

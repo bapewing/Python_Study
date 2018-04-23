@@ -10,8 +10,6 @@ import logging
 import logging.handlers
 
 # 在Flask很多扩展里面都可以先初始化扩展的对象，然后再去调用 init_app 方法去初始化
-from info.utils.common import do_index_class
-
 db = flask_sqlalchemy.SQLAlchemy()
 # Python3.6之后新增变量类型注释
 redis_db = None  # type:redis.StrictRedis
@@ -50,6 +48,10 @@ def create_app(config_pattern):
     redis_db = redis.StrictRedis(host=config.config['development'].REDIS_HOST,
                                  port=config.config['development'].REDIS_PORT, decode_responses=True)
     flask_session.Session(app)
+
+    # TODO: bug：ImportError: cannot import name 'db' 循环导入的问题
+    # 什么时候添加过滤器什么时候导入
+    from info.utils.common import do_index_class
     app.add_template_filter(do_index_class, 'index_class')
 
     # CSRF凡是请求除了get都需要用到，所以需要统一在hook时设置
