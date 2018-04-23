@@ -1,7 +1,7 @@
 import flask
 
 from info import db
-from info.models import User, News, Comment
+from info.models import User, News, Comment, CommentLike
 from info.utils import constants
 from info.utils.common import user_login_data
 from info.utils.response_code import RET
@@ -42,7 +42,8 @@ def news_detail(news_id):
 
     comments_model_list = []
     try:
-        comments_model_list = Comment.query.filter(Comment.news_id == news_id).order_by(Comment.create_time.desc()).all()
+        comments_model_list = Comment.query.filter(Comment.news_id == news_id).order_by(
+            Comment.create_time.desc()).all()
     except Exception as e:
         flask.current_app.logger.error(e)
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
@@ -153,3 +154,53 @@ def post_comment():
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库插入错误')
     # TODO:修改js中data名
     return flask.jsonify(errno=RET.OK, errmsg='评论成功', data=comment_model.to_dict())
+
+
+@news_blu.route('/comment_like')
+@user_login_data
+def comment_like():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+    parameters = flask.request.json
+    comment_id = parameters.get('comment_id', None)
+    action = parameters.get('action', None)
+
+    if not all([comment_id, action]):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+    if action not in ['add', 'remove']:
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        comment_id = int(comment_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        comment_model = Comment.query.get(comment_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+    if not comment_model:
+        return flask.jsonify(errno=RET.NODATA, errmsg='评论不存在')
+    comment_like_model = CommentLike.query.filter(CommentLike.user_id == user.id,
+                                                  CommentLike.comment_id == comment_model.id).first()
+    if action == 'add':
+        if not comment_like_model:
+            comment_like_model = CommentLike()
+            comment_like_model.comment_id = comment_model.id
+            comment_like_model.user_id = user.id
+            db.session.add(comment_like_model)
+    else:
+        if comment_like_model:
+            comment_like_model.delete()
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库错误')
+
+    return flask.jsonify(errno=RET.OK, errmsg='OK')

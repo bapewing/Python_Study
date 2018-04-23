@@ -143,6 +143,7 @@ class News(BaseModel, db.Model):
             "digest": self.digest,
             "create_time": self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             "content": self.content,
+            # 冗余字段可以返回所需要的数据
             "comments_count": self.comments.count(),
             "clicks": self.clicks,
             "category": self.category.to_dict(),
