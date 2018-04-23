@@ -26,7 +26,7 @@
         {% else %} block {% endif %};">收藏</a>
 
         {% if data.user %}
-            <form action="" class="comment_form" data-newsid="{{ data.news.id }}">
+            <form action="" class="comment_form" data-newsid="{{ data.detail_news.id }}">
                 <div class="person_pic">
                     <img src="{% if data.user.avatar_url %}
                         {{ data.user.avatar_url }}
@@ -45,7 +45,7 @@
 
 
         <div class="comment_count">
-            {{ data.news.comments_count }}条评论
+            {{ data.detail_news.comments_count }}条评论
         </div>
         <div class="comment_list_con">
             {% for comment in data.comments %}
@@ -70,7 +70,7 @@
                     <div class="comment_time fl">{{ comment.create_time }}</div>
                     <a href="javascript:;" class="comment_up fr" data-commentid="{{ comment.id }}" data-newsid="{{ comment.news_id }}">赞</a>
                     <a href="javascript:;" class="comment_reply fr">回复</a>
-                    <form class="reply_form fl" data-commentid="{{ comment.id }}" data-newsid="{{ data.news.id }}">
+                    <form class="reply_form fl" data-commentid="{{ comment.id }}" data-newsid="{{ data.detail_news.id }}">
                         <textarea class="reply_input"></textarea>
                         <input type="button" value="回复" class="reply_sub fr">
                         <input type="reset" name="" value="取消" class="reply_cancel fr">
