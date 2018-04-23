@@ -16,11 +16,22 @@ def news_detail(news_id):
     except Exception as e:
         flask.current_app.logger.error(e)
 
-    new_json_list = []
+    news_json_list = []
     for news in news_model_list:
-        new_json_list.append(news.to_basic_dict())
+        news_json_list.append(news.to_basic_dict())
+
+    news_model = None
+    try:
+        news_model = News.query.get(news_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+    if not news_model:
+        flask.abort(404)
+    news_model.clicks += 1
+
     data = {
         'user': user.to_dict() if user else None,
-        'news': new_json_list
+        'news': news_json_list,
+        'detail_news': news_model.to_dict()
     }
     return flask.render_template('news/detail.html', data=data)

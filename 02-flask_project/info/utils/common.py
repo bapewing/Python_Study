@@ -15,6 +15,7 @@ def do_index_class(index):
 
 # 装饰器访问全局变量
 def user_login_data(func):
+    # TODO: 作用：可以保持当前装饰器去装饰的函数的 __name__ 的值不变
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         user_id = flask.session.get('user_id', None)
