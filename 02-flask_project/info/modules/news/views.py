@@ -40,12 +40,25 @@ def news_detail(news_id):
         if news_model in user.collection_news:
             is_collected = True
 
+    comments_model_list = []
+    try:
+        comments_model_list = Comment.query.filter(Comment.news_id == news_id).order_by(Comment.create_time.desc()).all()
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    comments_json_list = []
+    for comment in comments_model_list:
+        comments_json_list.append(comment.to_dict())
+
     data = {
         'user': user.to_dict() if user else None,
         'news': news_json_list,
         'detail_news': news_model.to_dict(),
-        'is_collected': is_collected
+        'is_collected': is_collected,
+        'comments': comments_json_list
     }
+
     return flask.render_template('news/detail.html', data=data)
 
 

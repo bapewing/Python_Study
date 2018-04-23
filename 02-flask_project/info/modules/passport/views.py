@@ -197,6 +197,6 @@ def login():
 def logout():
     flask.session.pop('user_id', None)
     flask.session.pop('mobile', None)
-    flask.session.pop('nick_name')
+    flask.session.pop('nick_name', None)
 
     return flask.jsonify(errno=RET.OK, errmsg='退出成功')
