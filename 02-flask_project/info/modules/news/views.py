@@ -48,9 +48,26 @@ def news_detail(news_id):
         flask.current_app.logger.error(e)
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
 
+    comment_ids = []
+    try:
+        # 1、查询当前新闻下所有的评论
+        comment_ids = [comment.id for comment in comments_model_list]
+        # 2、查询当前评论中哪些评论被当前用户点赞 TODO:这个in_是什么？
+        comment_likes = CommentLike.query.filter(CommentLike.comment_id.in_(comment_ids),
+                                                 CommentLike.user_id == user.id).all()
+        # 3、查询被点赞的评论的id
+        comment_like_ids = [like_model.comment_id for like_model in comment_likes]
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
     comments_json_list = []
     for comment in comments_model_list:
-        comments_json_list.append(comment.to_dict())
+        comment_json = comment.to_dict()
+        comment_json['is_like'] = False
+        if comment.id in comment_like_ids:
+            comment_json['is_like'] = True
+        comments_json_list.append(comment_json)
 
     data = {
         'user': user.to_dict() if user else None,
@@ -159,7 +176,7 @@ def post_comment():
     return flask.jsonify(errno=RET.OK, errmsg='评论成功', data=data)
 
 
-@news_blu.route('/comment_like')
+@news_blu.route('/comment_like', methods=['POST'])
 @user_login_data
 def comment_like():
     user = flask.g.user
@@ -195,9 +212,13 @@ def comment_like():
             comment_like_model.comment_id = comment_model.id
             comment_like_model.user_id = user.id
             db.session.add(comment_like_model)
+            comment_model.like_count += 1
     else:
         if comment_like_model:
-            comment_like_model.delete()
+            # model没有delete方法
+            # comment_like_model.delete()
+            db.session.delete(comment_like_model)
+            comment_model.like_count -= 1
 
     try:
         db.session.commit()
