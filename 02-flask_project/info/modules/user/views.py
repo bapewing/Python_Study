@@ -1,6 +1,8 @@
 import flask
 
+from info.utils import constants
 from info.utils.common import user_login_data
+from info.utils.image_storage import storage
 from info.utils.response_code import RET
 from . import user_blu
 
@@ -51,3 +53,23 @@ def user_pic_info():
         return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
     if flask.request.method == "GET":
         return flask.render_template('user/user_pic_info.html', data={'user': user.to_dict()})
+
+    try:
+        # bug：must be str, not bytes 需要使用read读取成字节文件
+        avatar = flask.request.files.get('avatar').read()
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        key = storage(avatar)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.THIRDERR, errmsg='上传图片失败')
+    # 保存图片的key
+    user.avatar_url = key
+    data = {
+        'avatar_url': constants.QINIU_DOMIN_PREFIX + key
+    }
+
+    return flask.jsonify(errno=RET.OK, errmsg='OK', data=data)

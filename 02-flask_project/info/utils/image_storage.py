@@ -2,7 +2,7 @@ from qiniu import Auth, put_data
 
 access_key = "DTxGUHXb1XJE0T10A4ecG8iuv4E5hXqp1ymyN4x4"
 secret_key = "8R-jXZHtUfP3RVWY_hagjNS6VGuOYUSCPG0nD5kG"
-bucket_name = "Bape"
+bucket_name = "bape"
 
 
 def storage(data):
@@ -12,7 +12,7 @@ def storage(data):
         ret, info = put_data(token, None, data)
         print(ret, info)
     except Exception as e:
-        raise e;
+        raise e
 
     if info.status_code != 200:
         raise Exception("上传图片失败")
