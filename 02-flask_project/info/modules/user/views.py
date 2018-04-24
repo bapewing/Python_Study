@@ -96,3 +96,41 @@ def user_pass_info():
     user.password = new_password
 
     return flask.jsonify(errno=RET.OK, errmsg='OK')
+
+
+@user_blu.route('/collection')
+@user_login_data
+def user_collection_info():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+
+    page = flask.request.args.get('p', 1)
+    try:
+        page = int(page)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    pagination_obj = None
+    try:
+        pagination_obj = user.collection_news.paginate(page, constants.USER_COLLECTION_MAX_NEWS, False)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    current_page = pagination_obj.page
+    total_pages = pagination_obj.pages
+    collection_model_list = pagination_obj.items
+
+    collection_json_list = []
+    for collection in collection_model_list:
+        collection_json_list.append(collection.to_basic_dict())
+
+    data = {
+        'total_page': total_pages,
+        'current_page': current_page,
+        'collections': collection_json_list
+    }
+
+    return flask.render_template('user/user_collection.html', data=data)
