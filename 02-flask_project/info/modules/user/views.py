@@ -10,7 +10,6 @@ from . import user_blu
 def user_info():
     user = flask.g.user
     if not user:
-        # return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
         return flask.redirect('/')
     data = {
         'user': user.to_dict()
@@ -42,3 +41,13 @@ def user_base_info():
     user.gender = gender
 
     return flask.jsonify(errno=RET.OK, errmsg='OK')
+
+
+@user_blu.route('/pic_info', methods=['GET', 'POST'])
+@user_login_data
+def user_pic_info():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+    if flask.request.method == "GET":
+        return flask.render_template('user/user_pic_info.html', data={'user': user.to_dict()})
