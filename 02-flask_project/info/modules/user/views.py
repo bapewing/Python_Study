@@ -66,10 +66,33 @@ def user_pic_info():
     except Exception as e:
         flask.current_app.logger.error(e)
         return flask.jsonify(errno=RET.THIRDERR, errmsg='上传图片失败')
-    # 保存图片的key
+    # 保存图片的key TODO:图片每次获取都需要请求七牛，能不在本地做缓存？
     user.avatar_url = key
     data = {
         'avatar_url': constants.QINIU_DOMIN_PREFIX + key
     }
 
     return flask.jsonify(errno=RET.OK, errmsg='OK', data=data)
+
+
+@user_blu.route('/pass_info', methods=['GET', 'POST'])
+@user_login_data
+def user_pass_info():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+    if flask.request.method == "GET":
+        return flask.render_template('user/user_pass_info.html', data={'user': user.to_dict()})
+
+    parameters = flask.request.json
+    old_password = parameters.get('old_password', None)
+    new_password = parameters.get('new_password', None)
+
+    if not all([old_password, new_password]):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    if not user.check_passowrd(old_password):
+        return flask.jsonify(errno=RET.PWDERR, errmsg='密码错误')
+    user.password = new_password
+
+    return flask.jsonify(errno=RET.OK, errmsg='OK')
