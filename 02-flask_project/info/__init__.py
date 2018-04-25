@@ -49,12 +49,12 @@ def create_app(config_pattern):
                                  port=config.config['development'].REDIS_PORT, decode_responses=True)
     flask_session.Session(app)
 
-    # TODO: bug：ImportError: cannot import name 'db' 循环导入的问题
-    # 什么时候添加过滤器什么时候导入
+    # bug：ImportError: cannot import name 'db'
+    # 循环导入时，db还没有创建，所以导入失败
     from info.utils.common import do_index_class
     app.add_template_filter(do_index_class, 'index_class')
 
-    # CSRF凡是请求除了get都需要用到，所以需要统一在hook时设置
+    # CSRF对服务器进行数据操作的请求方法都需要设置保护，统一在hook时设置
     # bug：400 需要将设置在 flask_session.Session(app)之后，否则发送请求时使用到redis数据库会报错
     @app.after_request
     def after_request(response):

@@ -52,7 +52,7 @@ def news_detail(news_id):
     try:
         # 1、查询当前新闻下所有的评论
         comment_ids = [comment.id for comment in comments_model_list]
-        # 2、查询当前评论中哪些评论被当前用户点赞 TODO:这个in_是什么？
+        # 2、查询当前评论中哪些评论被当前用户点赞  in_ sql原生函数
         comment_likes = CommentLike.query.filter(CommentLike.comment_id.in_(comment_ids),
                                                  CommentLike.user_id == user.id).all()
         # 3、查询被点赞的评论的id

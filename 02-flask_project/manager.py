@@ -8,6 +8,5 @@ manager = flask_script.Manager(app)
 flask_migrate.Migrate(app, info.db)
 manager.add_command('db', flask_migrate.MigrateCommand)
 
-
 if __name__ == '__main__':
     manager.run()

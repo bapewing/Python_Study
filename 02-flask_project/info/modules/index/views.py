@@ -76,7 +76,9 @@ def news_list():
             return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
     else:
         try:
-            page_news = News.query.filter(News.category_id == cid).order_by(News.create_time.desc()).paginate(page, per_page, False)
+            page_news = News.query.filter(News.category_id == cid).order_by(News.create_time.desc()).paginate(page,
+                                                                                                              per_page,
+                                                                                                              False)
         except Exception as e:
             flask.current_app.logger.error(e)
             return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
