@@ -49,17 +49,18 @@ def news_detail(news_id):
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
 
     comment_ids = []
-    try:
-        # 1、查询当前新闻下所有的评论
-        comment_ids = [comment.id for comment in comments_model_list]
-        # 2、查询当前评论中哪些评论被当前用户点赞  in_ sql原生函数
-        comment_likes = CommentLike.query.filter(CommentLike.comment_id.in_(comment_ids),
-                                                 CommentLike.user_id == user.id).all()
-        # 3、查询被点赞的评论的id
-        comment_like_ids = [like_model.comment_id for like_model in comment_likes]
-    except Exception as e:
-        flask.current_app.logger.error(e)
-        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+    if user:
+        try:
+            # 1、查询当前新闻下所有的评论
+            comment_ids = [comment.id for comment in comments_model_list]
+            # 2、查询当前评论中哪些评论被当前用户点赞  in_ sql原生函数
+            comment_likes = CommentLike.query.filter(CommentLike.comment_id.in_(comment_ids),
+                                                     CommentLike.user_id == user.id).all()
+            # 3、查询被点赞的评论的id
+            comment_like_ids = [like_model.comment_id for like_model in comment_likes]
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
 
     comments_json_list = []
     for comment in comments_model_list:

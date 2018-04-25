@@ -13,7 +13,7 @@ def index():
     user = flask.g.user
     news_model_list = []
     try:
-        news_model_list = News.query.order_by(News.clicks.desc()).limit(constants.USER_COLLECTION_MAX_NEWS)
+        news_model_list = News.query.order_by(News.clicks.desc()).limit(constants.CLICK_RANK_MAX_NEWS)
     except Exception as e:
         flask.current_app.logger.error(e)
 

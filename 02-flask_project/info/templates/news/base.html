@@ -60,7 +60,7 @@
                 {% for new in data.news %}
                     {# index0从0开始循环 变量名 | 过滤器  #}
 {#                    <li><span>{{ loop.index }}</span><a href="#">{{ new.title }}</a></li>#}
-                    <li><span class="{{ loop.index0 | index_class }}">{{ loop.index }}</span><a href="#">{{ new.title }}</a></li>
+                    <li><span class="{{ loop.index0 | index_class }}">{{ loop.index }}</span><a href="/news/{{ new.id }}">{{ new.title }}</a></li>
                 {% endfor %}
             </ul>
         </div>
