@@ -40,7 +40,6 @@ def news_detail(news_id):
         if news_model in user.collection_news:
             is_collected = True
 
-    comments_model_list = []
     try:
         comments_model_list = Comment.query.filter(Comment.news_id == news_id).order_by(
             Comment.create_time.desc()).all()
@@ -48,7 +47,7 @@ def news_detail(news_id):
         flask.current_app.logger.error(e)
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
 
-    comment_ids = []
+    comment_like_ids = []
     if user:
         try:
             # 1、查询当前新闻下所有的评论
