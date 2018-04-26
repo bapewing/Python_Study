@@ -1,5 +1,7 @@
 import flask
 
+from info import db
+from info.models import Category, News
 from info.utils import constants
 from info.utils.common import user_login_data
 from info.utils.image_storage import storage
@@ -134,3 +136,77 @@ def user_collection_info():
     }
 
     return flask.render_template('user/user_collection.html', data=data)
+
+
+@user_blu.route('/news_release', methods=['GET', 'POST'])
+@user_login_data
+def user_news_release():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+    if flask.request.method == "GET":
+        category_model_list = []
+        try:
+            category_model_list = Category.query.all()
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+        category_json_list = []
+        for category in category_model_list:
+            category_json_list.append(category.to_dict())
+        # 移除最新的分类
+        category_json_list.pop(0)
+
+        data = {
+            'user': user.to_dict(),
+            'categories': category_json_list
+        }
+        return flask.render_template('user/user_news_release.html', data=data)
+
+    title = flask.request.form.get("title")
+    source = "个人发布"
+    digest = flask.request.form.get("digest")
+    content = flask.request.form.get("content")
+    index_image = flask.request.files.get("index_image")
+    category_id = flask.request.form.get("category_id")
+
+    if not all([title, source, digest, content, index_image, category_id]):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数有误')
+
+    try:
+        category_id = int(category_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数有误')
+
+    try:
+        index_image = index_image.read()
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        key = storage(index_image)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.THIRDERR, errmsg='上传图片失败')
+
+    news = News()
+    news.title = title
+    news.digest = digest
+    news.source = source
+    news.content = content
+    news.index_image_url = constants.QINIU_DOMIN_PREFIX + key
+    news.category_id = category_id
+    news.user_id = user.id
+    news.status = 1
+
+    try:
+        db.session.add(news)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库错误')
+
+    return flask.jsonify(errno=RET.OK, errmsg='OK')
