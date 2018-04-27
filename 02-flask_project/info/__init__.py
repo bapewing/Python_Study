@@ -54,6 +54,16 @@ def create_app(config_pattern):
     from info.utils.common import do_index_class
     app.add_template_filter(do_index_class, 'index_class')
 
+    # bug：依然会造成循环导入的问题
+    from info.utils.common import user_login_data
+
+    @app.errorhandler(404)
+    @user_login_data
+    def page_not_found(e):
+        user = flask.g.user
+        data = {'user': user.to_dict() if user else None}
+        return flask.render_template('news/404.html', data=data)
+
     # CSRF对服务器进行数据操作的请求方法都需要设置保护，统一在hook时设置
     # bug：400 需要将设置在 flask_session.Session(app)之后，否则发送请求时使用到redis数据库会报错
     @app.after_request
