@@ -198,5 +198,7 @@ def logout():
     flask.session.pop('user_id', None)
     flask.session.pop('mobile', None)
     flask.session.pop('nick_name', None)
+    # 退出时一定要清楚is_admin的session值
+    flask.session.pop('is_admin', None)
 
     return flask.jsonify(errno=RET.OK, errmsg='退出成功')

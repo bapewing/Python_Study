@@ -12,6 +12,10 @@ def index():
 @admin_blu.route('/login', methods=['GET', 'POST'])
 def admin_login():
     if flask.request.method == 'GET':
+        user_id = flask.session.get('user_id', None)
+        is_admin = flask.session.get('is_admin', False)
+        if user_id and is_admin:
+            return flask.redirect(flask.url_for('admin.index'))
         return flask.render_template('admin/login.html')
 
     # 取到登录的参数
