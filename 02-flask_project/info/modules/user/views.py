@@ -114,7 +114,6 @@ def user_collection_info():
         flask.current_app.logger.error(e)
         return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
 
-    pagination_obj = None
     try:
         pagination_obj = user.collection_news.paginate(page, constants.USER_COLLECTION_MAX_NEWS, False)
     except Exception as e:
@@ -145,7 +144,6 @@ def user_news_release():
     if not user:
         return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
     if flask.request.method == "GET":
-        category_model_list = []
         try:
             category_model_list = Category.query.all()
         except Exception as e:
@@ -210,3 +208,41 @@ def user_news_release():
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库错误')
 
     return flask.jsonify(errno=RET.OK, errmsg='OK')
+
+
+@user_blu.route('/news_list')
+@user_login_data
+def user_news_list():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+
+    page = flask.request.args.get("p", 1)
+
+    try:
+        page = int(page)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        pagination_obj = News.query.filter(News.user_id == user.id).paginate(page, constants.USER_COLLECTION_MAX_NEWS,
+                                                                             False)
+        news_model_list = pagination_obj.items if pagination_obj.items else []
+        current_page = pagination_obj.page if pagination_obj.page else 1
+        total_page = pagination_obj.pages if pagination_obj.pages else 1
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    news_json_list = []
+    for news in news_model_list:
+        news_json_list.append(news.to_review_dict())
+
+    data = {
+        "news_list": news_json_list,
+        "total_page": total_page,
+        "current_page": current_page
+    }
+
+    return flask.render_template('user/user_news_list.html', data=data)
