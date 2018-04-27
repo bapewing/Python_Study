@@ -82,6 +82,8 @@ def create_app(config_pattern):
     app.register_blueprint(news_blu)
     from info.modules.user import user_blu
     app.register_blueprint(user_blu)
+    from info.modules.admin import admin_blu
+    app.register_blueprint(admin_blu)
 
     # 其实也可以返回元组 app, info_db
     return app
