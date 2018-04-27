@@ -28,8 +28,8 @@
         <div class="form-group"><label>上传图片：</label><input type="file" name="index_image" class="input_file"></div>
         <div class="form-group">
             <label>内容：</label>
-            {# 经测试，三方插件tinymce设置value值时，必须要有字符，如空格，不能是空字符串 #}
-            <div class="fl"><input class="input_area" id="rich_content" name="content" value=" "></input></div>
+            {# 经测试，三方插件tinymce设置value值时，必须要有字符，空字符串会报参数错误，空格不能进行赋值，必须有默认字符串，参照：admin新闻编辑 #}
+            <div class="fl"><input class="input_area" id="rich_content" name="content" value="哈哈"></input></div>
         </div>
         <div class="form-group">            
             <input type="submit" value="发 布" class="input_sub input_sub2">
