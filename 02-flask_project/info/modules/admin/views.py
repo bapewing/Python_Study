@@ -3,6 +3,7 @@ import time
 
 from datetime import datetime, timedelta
 
+from info import db
 from info.models import User, News, Category
 from info.utils import constants
 from info.utils.common import user_login_data
@@ -408,3 +409,53 @@ def news_edit_detail():
 
     return flask.jsonify(errno=RET.OK, errmsg="OK")
 
+
+@admin_blu.route('/news_type', methods=['GET', 'POST'])
+@user_login_data
+def news_type():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+    if flask.request.method == 'GET':
+        try:
+            category_model_list = Category.query.all()
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.render_template('admin/news_type.html', errmsg="查询数据错误")
+
+        category_json_list = []
+        for category in category_model_list:
+            category_json_list.append(category.to_dict())
+        category_json_list.pop(0)
+
+        data = {
+            "categories": category_json_list
+        }
+
+        return flask.render_template('admin/news_type.html', data=data)
+
+    cname = flask.request.json.get("name")
+    # 如果传了cid，代表是编辑已存在的分类
+    # 根据传参不同，判断是新增分类还是修改当前分类
+    cid = flask.request.json.get("id")
+
+    if not cname:
+        return flask.jsonify(errno=RET.PARAMERR, errmsg="参数错误")
+
+    if cid:
+        try:
+            cid = int(cid)
+            category = Category.query.get(cid)
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.jsonify(errno=RET.PARAMERR, errmsg="参数错误")
+
+        if not category:
+            return flask.jsonify(errno=RET.NODATA, errmsg="未查询到分类数据")
+        category.name = cname
+    else:
+        category = Category()
+        category.name = cname
+        db.session.add(category)
+
+    return flask.jsonify(errno=RET.OK, errmsg='OK')
