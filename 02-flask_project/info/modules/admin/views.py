@@ -145,7 +145,8 @@ def user_list():
         return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
 
     try:
-        pagination_obj = User.query.filter(User.is_admin == False).paginate(page, constants.ADMIN_USER_PAGE_MAX_COUNT, False)
+        pagination_obj = User.query.filter(User.is_admin == False).paginate(page, constants.ADMIN_USER_PAGE_MAX_COUNT,
+                                                                            False)
         user_model_list = pagination_obj.items
         current_page = pagination_obj.page
         total_page = pagination_obj.pages
@@ -175,14 +176,21 @@ def news_review():
         return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
 
     page = flask.request.args.get("page", 1)
+    keywords = flask.request.args.get('keywords', None)
     try:
         page = int(page)
     except Exception as e:
         flask.current_app.logger.error(e)
         return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
 
+    filters = [News.status != 0]
+    if keywords:
+        filters.append(News.title.contains(keywords))
+
     try:
-        pagination_obj = News.query.filter(News.status != 0).order_by(News.create_time.desc()).paginate(page, constants.ADMIN_NEWS_PAGE_MAX_COUNT, False)
+        pagination_obj = News.query.filter(*filters).order_by(News.create_time.desc()).paginate(page,
+                                                                                                constants.ADMIN_NEWS_PAGE_MAX_COUNT,
+                                                                                                False)
         news_model_list = pagination_obj.items
         current_page = pagination_obj.page
         total_page = pagination_obj.pages
@@ -202,4 +210,3 @@ def news_review():
     }
 
     return flask.render_template('admin/news_review.html', data=data)
-
