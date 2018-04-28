@@ -235,7 +235,11 @@ def news_review_detail(news_id):
 
 
 @admin_blu.route('/news_review_action', methods=['POST'])
+@user_login_data
 def news_review_action():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
     # 1. 接受参数
     news_id = flask.request.json.get("news_id")
     action = flask.request.json.get("action")
@@ -269,3 +273,47 @@ def news_review_action():
         news.reason = reason
 
     return flask.jsonify(errno=RET.OK, errmsg="OK")
+
+
+@admin_blu.route('/news_edit')
+@user_login_data
+def news_edit():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+
+    page = flask.request.args.get("page", 1)
+    keywords = flask.request.args.get('keywords', None)
+    try:
+        page = int(page)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    filters = [News.status == 0]
+    if keywords:
+        filters.append(News.title.contains(keywords))
+
+    try:
+        pagination_obj = News.query.filter(*filters).order_by(News.create_time.desc()).paginate(page,
+                                                                                                constants.ADMIN_NEWS_PAGE_MAX_COUNT,
+                                                                                                False)
+        news_model_list = pagination_obj.items
+        current_page = pagination_obj.page
+        total_page = pagination_obj.pages
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    # 进行模型列表转字典列表
+    news_json_list = []
+    for news in news_model_list:
+        news_json_list.append(news.to_dict())
+
+    data = {
+        "news_list": news_json_list,
+        "total_page": total_page,
+        "current_page": current_page
+    }
+
+    return flask.render_template('admin/news_edit.html', data=data)
