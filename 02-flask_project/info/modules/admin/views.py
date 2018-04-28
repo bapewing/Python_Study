@@ -3,7 +3,7 @@ import time
 
 from datetime import datetime, timedelta
 
-from info.models import User, News
+from info.models import User, News, Category
 from info.utils import constants
 from info.utils.common import user_login_data
 from info.utils.response_code import RET
@@ -317,3 +317,50 @@ def news_edit():
     }
 
     return flask.render_template('admin/news_edit.html', data=data)
+
+
+@admin_blu.route('/news_edit_detail')
+@user_login_data
+def news_edit_detail():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+
+    news_id = flask.request.args.get('news_id')
+    if not news_id:
+        flask.abort(404)
+    try:
+        news_id = int(news_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.render_template('admin/news_edit_detail.html', errmsg='参数错误')
+
+    try:
+        news = News.query.get(news_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.render_template('admin/news_edit_detail.html', errmsg='查询数据错误')
+
+    if not news:
+        return flask.render_template('admin/news_edit_detail.html', errmsg='未查询到数据')
+
+    try:
+        category_model_list = Category.query.all()
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.render_template('admin/news_edit_detail.html', errmsg="查询数据错误")
+
+    category_json_list = []
+    for category in category_model_list:
+        category_json = category.to_dict()
+        if category.id == news.category_id:
+            category_json['is_selected'] = True
+        category_json_list.append(category_json)
+    category_json_list.pop(0)
+
+    data = {
+        "news": news.to_dict(),
+        "categories": category_json_list
+    }
+
+    return flask.render_template('admin/news_edit_detail.html', data=data)
