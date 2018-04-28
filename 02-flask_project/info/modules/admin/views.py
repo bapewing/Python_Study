@@ -1,12 +1,18 @@
 import flask
 
 from info.models import User
+from info.utils.common import user_login_data
 from . import admin_blu
 
 
 @admin_blu.route('/index')
+@user_login_data
 def index():
-    return flask.render_template('admin/index.html')
+    user = flask.g.user
+    data = {
+        'user': user.to_dict() if user else None
+    }
+    return flask.render_template('admin/index.html', data=data)
 
 
 @admin_blu.route('/login', methods=['GET', 'POST'])
