@@ -52,6 +52,8 @@
 				<input type="submit" value="确定" class="confirm">
 				<input type="button" value="取消" class="cancel" onclick="cancel()">
 			</div>
+                {# TODO: 这个是怎么提交上来的？#}
+                <input type="hidden" name="news_id" value="{{ data.news.id }}">
 			</form>	
 		</div>
 

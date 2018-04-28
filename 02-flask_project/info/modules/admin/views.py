@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from info.models import User, News, Category
 from info.utils import constants
 from info.utils.common import user_login_data
+from info.utils.image_storage import storage
 from info.utils.response_code import RET
 from . import admin_blu
 
@@ -319,48 +320,91 @@ def news_edit():
     return flask.render_template('admin/news_edit.html', data=data)
 
 
-@admin_blu.route('/news_edit_detail')
+@admin_blu.route('/news_edit_detail', methods=['GET', 'POST'])
 @user_login_data
 def news_edit_detail():
     user = flask.g.user
     if not user:
         return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
 
-    news_id = flask.request.args.get('news_id')
-    if not news_id:
-        flask.abort(404)
-    try:
-        news_id = int(news_id)
-    except Exception as e:
-        flask.current_app.logger.error(e)
-        return flask.render_template('admin/news_edit_detail.html', errmsg='参数错误')
+    if flask.request.method == 'GET':
+
+        news_id = flask.request.args.get('news_id')
+        if not news_id:
+            flask.abort(404)
+        try:
+            news_id = int(news_id)
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.render_template('admin/news_edit_detail.html', errmsg='参数错误')
+
+        try:
+            news = News.query.get(news_id)
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.render_template('admin/news_edit_detail.html', errmsg='查询数据错误')
+
+        if not news:
+            return flask.render_template('admin/news_edit_detail.html', errmsg='未查询到数据')
+
+        try:
+            category_model_list = Category.query.all()
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.render_template('admin/news_edit_detail.html', errmsg="查询数据错误")
+
+        category_json_list = []
+        for category in category_model_list:
+            category_json = category.to_dict()
+            if category.id == news.category_id:
+                category_json['is_selected'] = True
+            category_json_list.append(category_json)
+        category_json_list.pop(0)
+
+        data = {
+            "news": news.to_dict(),
+            "categories": category_json_list
+        }
+
+        return flask.render_template('admin/news_edit_detail.html', data=data)
+
+    news_id = flask.request.form.get("news_id")
+    title = flask.request.form.get("title")
+    digest = flask.request.form.get("digest")
+    content = flask.request.form.get("content")
+    index_image = flask.request.files.get("index_image")
+    category_id = flask.request.form.get("category_id")
+
+    if not all([title, digest, content, category_id]):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg="参数有误")
 
     try:
         news = News.query.get(news_id)
     except Exception as e:
         flask.current_app.logger.error(e)
-        return flask.render_template('admin/news_edit_detail.html', errmsg='查询数据错误')
+        return flask.jsonify(errno=RET.DBERR, errmsg="数据查询失败")
 
     if not news:
-        return flask.render_template('admin/news_edit_detail.html', errmsg='未查询到数据')
+        return flask.jsonify(errno=RET.NODATA, errmsg="未查询到新闻数据")
 
-    try:
-        category_model_list = Category.query.all()
-    except Exception as e:
-        flask.current_app.logger.error(e)
-        return flask.render_template('admin/news_edit_detail.html', errmsg="查询数据错误")
+    if index_image:
+        try:
+            index_image = index_image.read()
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.jsonify(errno=RET.PARAMERR, errmsg="参数有误")
 
-    category_json_list = []
-    for category in category_model_list:
-        category_json = category.to_dict()
-        if category.id == news.category_id:
-            category_json['is_selected'] = True
-        category_json_list.append(category_json)
-    category_json_list.pop(0)
+        try:
+            key = storage(index_image)
+        except Exception as e:
+            flask.current_app.logger.error(e)
+            return flask.jsonify(errno=RET.THIRDERR, errmsg="上传图片错误")
+        news.index_image_url = constants.QINIU_DOMIN_PREFIX + key
 
-    data = {
-        "news": news.to_dict(),
-        "categories": category_json_list
-    }
+    news.title = title
+    news.digest = digest
+    news.content = content
+    news.category_id = category_id
 
-    return flask.render_template('admin/news_edit_detail.html', data=data)
+    return flask.jsonify(errno=RET.OK, errmsg="OK")
+
