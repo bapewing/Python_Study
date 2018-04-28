@@ -210,3 +210,26 @@ def news_review():
     }
 
     return flask.render_template('admin/news_review.html', data=data)
+
+
+@admin_blu.route('/news_review_detail/<int:news_id>')
+@user_login_data
+def news_review_detail(news_id):
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+
+    try:
+        news = News.query.get(news_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    if not news:
+        return flask.render_template('admin/news_review_detail.html', data={"errmsg": "未查询到此新闻"})
+
+    data = {
+        "news": news.to_dict()
+    }
+    return flask.render_template('admin/news_review_detail.html', data=data)
+
