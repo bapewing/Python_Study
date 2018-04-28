@@ -1,7 +1,11 @@
 import flask
+import time
+
+from datetime import datetime, timedelta
 
 from info.models import User
 from info.utils.common import user_login_data
+from info.utils.response_code import RET
 from . import admin_blu
 
 
@@ -54,4 +58,75 @@ def admin_login():
 
     # 跳转到后面管理首页
     return flask.redirect(flask.url_for('admin.index'))
+
+
+@admin_blu.route('/user_count')
+@user_login_data
+def user_count():
+    user = flask.g.user
+    if not user:
+        # TODO: 什么时候返回模板文件？
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+
+    # TODO:根据需求，需要显示模板时，应该有个默认返回值 不需要返回模板时，可以return json
+    try:
+        total_count = User.query.filter(User.is_admin == False).count()
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonfiy(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    # TODO: 查询下时间格式
+    t = time.localtime()
+    begin_mon_time = datetime.strptime(('%d-%02d-01' % (t.tm_year, t.tm_mon)), '%Y-%m-%d')
+    try:
+        mon_count = User.query.filter(User.is_admin == False, User.create_time > begin_mon_time).count()
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonfiy(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    begin_day_time = datetime.strptime(('%d-%02d-%02d' % (t.tm_year, t.tm_mon, t.tm_mday)), '%Y-%m-%d')
+    try:
+        day_count = User.query.filter(User.is_admin == False, User.create_time > begin_day_time).count()
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonfiy(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    # 拆线图数据
+
+    active_time = []
+    active_count = []
+
+    # 取到今天的时间字符串
+    today_date_str = ('%d-%02d-%02d' % (t.tm_year, t.tm_mon, t.tm_mday))
+    # 转成时间对象
+    today_date = datetime.strptime(today_date_str, "%Y-%m-%d")
+
+    for i in range(0, 31):
+        # 取到某一天的0点0分
+        begin_date = today_date - timedelta(days=i)
+        # 取到下一天的0点0分
+        end_date = today_date - timedelta(days=(i - 1))
+        count = User.query.filter(User.is_admin == False, User.last_login >= begin_date, User.last_login < end_date).count()
+        active_count.append(count)
+        active_time.append(begin_date.strftime('%Y-%m-%d'))
+
+    # User.query.filter(User.is_admin == False, User.last_login >= 今天0点0分, User.last_login < 今天24点).count()
+
+    # 反转，让最近的一天显示在最后
+    active_time.reverse()
+    active_count.reverse()
+
+    data = {
+        "total_count": total_count,
+        "mon_count": mon_count,
+        "day_count": day_count,
+        "active_time": active_time,
+        "active_count": active_count
+
+    }
+
+    return flask.render_template('admin/user_count.html', data=data)
+
+
+
 
