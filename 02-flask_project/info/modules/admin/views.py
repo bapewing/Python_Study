@@ -4,6 +4,7 @@ import time
 from datetime import datetime, timedelta
 
 from info.models import User
+from info.utils import constants
 from info.utils.common import user_login_data
 from info.utils.response_code import RET
 from . import admin_blu
@@ -106,7 +107,8 @@ def user_count():
         begin_date = today_date - timedelta(days=i)
         # 取到下一天的0点0分
         end_date = today_date - timedelta(days=(i - 1))
-        count = User.query.filter(User.is_admin == False, User.last_login >= begin_date, User.last_login < end_date).count()
+        count = User.query.filter(User.is_admin == False, User.last_login >= begin_date,
+                                  User.last_login < end_date).count()
         active_count.append(count)
         active_time.append(begin_date.strftime('%Y-%m-%d'))
 
@@ -128,5 +130,38 @@ def user_count():
     return flask.render_template('admin/user_count.html', data=data)
 
 
+@admin_blu.route('/user_list')
+@user_login_data
+def user_list():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
 
+    page = flask.request.args.get("page", 1)
+    try:
+        page = int(page)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        page = 1
 
+    try:
+        paginate = User.query.filter(User.is_admin == False).paginate(page, constants.ADMIN_USER_PAGE_MAX_COUNT)
+        users = paginate.items
+        current_page = paginate.page
+        total_page = paginate.pages
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        # return flask.jsonify(errno=)
+
+    # 进行模型列表转字典列表
+    user_dict_li = []
+    for user in users:
+        user_dict_li.append(user.to_admin_dict())
+
+    data = {
+        "users": user_dict_li,
+        "total_page": total_page,
+        "current_page": current_page,
+    }
+
+    return flask.render_template('admin/user_list.html', data=data)
