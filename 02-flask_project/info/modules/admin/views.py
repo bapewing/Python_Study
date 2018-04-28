@@ -3,7 +3,7 @@ import time
 
 from datetime import datetime, timedelta
 
-from info.models import User
+from info.models import User, News
 from info.utils import constants
 from info.utils.common import user_login_data
 from info.utils.response_code import RET
@@ -142,26 +142,64 @@ def user_list():
         page = int(page)
     except Exception as e:
         flask.current_app.logger.error(e)
-        page = 1
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
 
     try:
-        paginate = User.query.filter(User.is_admin == False).paginate(page, constants.ADMIN_USER_PAGE_MAX_COUNT)
-        users = paginate.items
-        current_page = paginate.page
-        total_page = paginate.pages
+        pagination_obj = User.query.filter(User.is_admin == False).paginate(page, constants.ADMIN_USER_PAGE_MAX_COUNT, False)
+        user_model_list = pagination_obj.items
+        current_page = pagination_obj.page
+        total_page = pagination_obj.pages
     except Exception as e:
         flask.current_app.logger.error(e)
-        # return flask.jsonify(errno=)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
 
     # 进行模型列表转字典列表
-    user_dict_li = []
-    for user in users:
-        user_dict_li.append(user.to_admin_dict())
+    user_json_list = []
+    for user in user_model_list:
+        user_json_list.append(user.to_admin_dict())
 
     data = {
-        "users": user_dict_li,
+        "users": user_json_list,
         "total_page": total_page,
         "current_page": current_page,
     }
 
     return flask.render_template('admin/user_list.html', data=data)
+
+
+@admin_blu.route('/news_review')
+@user_login_data
+def news_review():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+
+    page = flask.request.args.get("page", 1)
+    try:
+        page = int(page)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        pagination_obj = News.query.filter(News.status != 0).order_by(News.create_time.desc()).paginate(page, constants.ADMIN_NEWS_PAGE_MAX_COUNT, False)
+        news_model_list = pagination_obj.items
+        current_page = pagination_obj.page
+        total_page = pagination_obj.pages
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    # 进行模型列表转字典列表
+    news_json_list = []
+    for news in news_model_list:
+        news_json_list.append(news.to_review_dict())
+
+    data = {
+        "news_list": news_json_list,
+        "total_page": total_page,
+        "current_page": current_page
+    }
+
+    return flask.render_template('admin/news_review.html', data=data)
+
