@@ -282,3 +282,15 @@ def user_follow():
     }
 
     return flask.render_template('user/user_follow.html', data=data)
+
+
+@user_blu.route('/other_info')
+@user_login_data
+def other_info():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+    data = {
+        'user': user.to_dict()
+    }
+    return flask.render_template('user/other.html', data=data)
