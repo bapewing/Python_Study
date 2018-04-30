@@ -15,7 +15,8 @@ def news_detail(news_id):
     # 排行榜数据显示
     news_model_list = []
     try:
-        news_model_list = News.query.filter(News.status == 0).order_by(News.create_time.desc()).limit(constants.CLICK_RANK_MAX_NEWS)
+        news_model_list = News.query.filter(News.status == 0).order_by(News.create_time.desc()).limit(
+            constants.CLICK_RANK_MAX_NEWS)
     except Exception as e:
         flask.current_app.logger.error(e)
 
@@ -69,11 +70,17 @@ def news_detail(news_id):
             comment_json['is_like'] = True
         comments_json_list.append(comment_json)
 
+    is_followed = False
+    if news_model.user and user:
+        if news_model.user in user.followed:
+            is_followed = True
+
     data = {
         'user': user.to_dict() if user else None,
         'news': news_json_list,
         'detail_news': news_model.to_dict(),
         'is_collected': is_collected,
+        'is_followed': is_followed,
         'comments': comments_json_list
     }
 
@@ -226,5 +233,43 @@ def comment_like():
         db.session.rollback()
         flask.current_app.logger.error(e)
         return flask.jsonify(errno=RET.DBERR, errmsg='数据库错误')
+
+    return flask.jsonify(errno=RET.OK, errmsg='OK')
+
+
+@news_blu.route('/followed_user', methods=['POST'])
+@user_login_data
+def followed_user():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+    user_id = flask.request.json.get('user_id')
+    action = flask.request.json.get('action')
+
+    if not all([user_id, action]):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg="参数错误")
+
+    if action not in ("follow", "unfollow"):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg="参数错误")
+
+    try:
+        other = User.query.get(user_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    if not other:
+        flask.jsonify(errno=RET.NODATA, errmsg='未查询到数据')
+
+    if action == "follow":
+        if other not in user.followed:
+            user.followed.append(other)
+        else:
+            return flask.jsonify(errno=RET.DATAEXIST, errmsg='当前用户已被关注')
+    else:
+        if other in user.followed:
+            user.followed.remove(other)
+        else:
+            return flask.jsonify(errno=RET.DATAEXIST, errmsg="当前用户未被关注")
 
     return flask.jsonify(errno=RET.OK, errmsg='OK')
