@@ -15,7 +15,7 @@ def news_detail(news_id):
     # 排行榜数据显示
     news_model_list = []
     try:
-        news_model_list = News.query.filter(News.status == 0).order_by(News.create_time.desc()).limit(
+        news_model_list = News.query.filter(News.status == 0).order_by(News.clicks.desc()).limit(
             constants.CLICK_RANK_MAX_NEWS)
     except Exception as e:
         flask.current_app.logger.error(e)
