@@ -246,3 +246,39 @@ def user_news_list():
     }
 
     return flask.render_template('user/user_news_list.html', data=data)
+
+
+@user_blu.route('/user_follow')
+@user_login_data
+def user_follow():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+
+    p = flask.request.args.get("p", 1)
+    try:
+        p = int(p)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        pagination_obj = user.followed.paginate(p, constants.USER_FOLLOWED_MAX_COUNT, False)
+        follow_model_list = pagination_obj.items
+        current_page = pagination_obj.page
+        total_page = pagination_obj.pages
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    user_json_list = []
+    for follow_user in follow_model_list:
+        user_json_list.append(follow_user.to_dict())
+
+    data = {
+        "users": user_json_list,
+        "total_page": total_page,
+        "current_page": current_page
+    }
+
+    return flask.render_template('user/user_follow.html', data=data)
