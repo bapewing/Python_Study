@@ -1,7 +1,7 @@
 import flask
 
 from info import db
-from info.models import Category, News
+from info.models import Category, News, User
 from info.utils import constants
 from info.utils.common import user_login_data
 from info.utils.image_storage import storage
@@ -284,13 +284,87 @@ def user_follow():
     return flask.render_template('user/user_follow.html', data=data)
 
 
+# TODO: 1.退出时的bug 2.通过/other_info/<int:other_user_id>方式获取用户信息 3.接口可以设计成获取页面所有数据，而不是用到两个请求
 @user_blu.route('/other_info')
 @user_login_data
 def other_info():
     user = flask.g.user
     if not user:
         return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+    other_user_id = flask.request.args.get('other_user_id')
+    try:
+        other_user_id = int(other_user_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        other = User.query.get(other_user_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    if not other:
+        flask.abort(404)
+
+    is_followed = False
+    if other and user:
+        if other in user.followed:
+            is_followed = True
+
     data = {
-        'user': user.to_dict()
+        'user': user.to_dict(),
+        'is_followed': is_followed,
+        'other_info': other.to_dict()
     }
     return flask.render_template('user/other.html', data=data)
+
+
+@user_blu.route('/other_news_list')
+@user_login_data
+def other_news_list():
+    user = flask.g.user
+    if not user:
+        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+
+    other_user_id = flask.request.args.get('other_user_id')
+    page = flask.request.args.get('p', 1)
+
+    if not all([other_user_id, page]):
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        other_user_id = int(other_user_id)
+        page = int(page)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    try:
+        other = User.query.get(other_user_id)
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errno=RET.DBERR, errmsg='数据库查询错误')
+
+    if not other:
+        return flask.jsonify(errno=RET.NODATA, errmsg='当前用户不存在')
+
+    try:
+        pagination_obj = other.news_list.paginate(page, constants.USER_COLLECTION_MAX_NEWS, False)
+        news_model_list = pagination_obj.items
+        current_page = pagination_obj.page
+        total_page = pagination_obj.pages
+    except Exception as e:
+        flask.current_app.logger.error(e)
+        return flask.jsonify(errnp=RET.DBERR, errmsg='数据库查询错误')
+
+    news_json_list = []
+    for news_item in news_model_list:
+        news_json_list.append(news_item.to_basic_dict())
+
+    data = {
+        "news_list": news_json_list,
+        "total_page": total_page,
+        "current_page": current_page
+    }
+    return flask.jsonify(errno=RET.OK, errmsg="OK", data=data)
