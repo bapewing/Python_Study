@@ -63,6 +63,18 @@ def admin_login():
     return flask.redirect(flask.url_for('admin.index'))
 
 
+@admin_blu.route('/logout')
+def admin_logout():
+    flask.session.pop('user_id', None)
+    flask.session.pop('mobile', None)
+    flask.session.pop('nick_name', None)
+    # 退出时一定要清楚is_admin的session值
+    flask.session.pop('is_admin', None)
+
+    return flask.redirect(flask.url_for('admin.admin_login'))
+    # return flask.render_template('admin/login.html')
+
+
 @admin_blu.route('/user_count')
 @user_login_data
 def user_count():

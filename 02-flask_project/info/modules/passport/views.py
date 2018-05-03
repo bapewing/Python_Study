@@ -85,7 +85,7 @@ def send_sms_code():
         # 不去搞和这个编码问题，直接变量
         flask.current_app.logger.debug(sms_code_str)
         # bug：验证码和过期时间以数组形式传给第三方，属于文档阅读不仔细
-        result = CCP().send_template_sms(mobile_phone, [sms_code_str, constants.SMS_CODE_REDIS_EXPIRES / 60], '1')
+        result = CCP().send_template_sms(mobile_phone, [sms_code_str, constants.SMS_CODE_REDIS_EXPIRES / 5], '1')
 
         if result != 0:
             return flask.jsonify(errno=RET.THIRDERR, errmsg='发送短信失败')

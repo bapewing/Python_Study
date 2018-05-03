@@ -290,7 +290,8 @@ def user_follow():
 def other_info():
     user = flask.g.user
     if not user:
-        return flask.jsonify(errno=RET.SESSIONERR, errmsg='用户未登录')
+        # TODO:点进关注，退出登录，暂时这样修改bug
+        return flask.redirect(flask.url_for('index.index'))
     other_user_id = flask.request.args.get('other_user_id')
     try:
         other_user_id = int(other_user_id)
