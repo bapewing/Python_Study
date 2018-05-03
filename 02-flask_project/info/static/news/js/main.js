@@ -264,7 +264,7 @@ function sendSMSCode() {
                 }, 1000)
             } else {
                 alert(response.errmsg);
-                $(".get_code").attr("onclick", "sendSMS(code)")
+                $(".get_code").attr("onclick", "sendSMSCode();")
             }
         }
     })
