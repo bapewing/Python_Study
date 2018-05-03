@@ -15,7 +15,7 @@ manager.add_command('db', flask_migrate.MigrateCommand)
 @manager.option('-p', '-password', dest='password')
 def create_super_user(name, password):
     if not all([name, password]):
-        print('参数不足')
+        print('parameter error')
 
     user = User()
     user.nick_name = name
@@ -29,7 +29,7 @@ def create_super_user(name, password):
     except Exception as e:
         db.session.rollback()
         print(e)
-    print('添加成功')
+    print('success')
 
 
 if __name__ == '__main__':
