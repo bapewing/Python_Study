@@ -7,7 +7,6 @@ from info.models import User
 
 app = info.create_app('development')
 manager = flask_script.Manager(app)
-# 将app与db关联
 flask_migrate.Migrate(app, db)
 manager.add_command('db', flask_migrate.MigrateCommand)
 
